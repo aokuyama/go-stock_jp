@@ -13,7 +13,7 @@ func NewPositions() *Positions {
 	return &Positions{}
 }
 
-func (p *Positions) addPositionTrade(trade *trade.PositionTrade) error {
+func (p *Positions) AddPositionTrade(trade *trade.PositionTrade) error {
 	for _, position := range *p {
 		if position.IsEqualPosition(trade) {
 			return position.IncludePosition(trade)
@@ -28,7 +28,7 @@ func (p *Positions) addPositionTrade(trade *trade.PositionTrade) error {
 	return nil
 }
 
-func (p *Positions) addPayTrade(trade *trade.PayTrade) error {
+func (p *Positions) AddPayTrade(trade *trade.PayTrade) error {
 	for _, position := range *p {
 		if position.IsEqualPay(trade) {
 			err := position.IncludePay(trade)
@@ -49,7 +49,7 @@ func (p *Positions) addPayTrade(trade *trade.PayTrade) error {
 	return errors.New("missing position")
 }
 
-func (p *Positions) errors() *Positions {
+func (p *Positions) Errors() *Positions {
 	ps := NewPositions()
 	for _, position := range *p {
 		if position.IsError() {
@@ -69,26 +69,6 @@ func (p *Positions) Uncompletes() *Positions {
 	return ps
 }
 
-func (p *Positions) AddPositionTrades(trades *trade.PositionTrades) error {
-	for _, trade := range *trades {
-		err := p.addPositionTrade(trade)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (p *Positions) AddPayTrades(trades *trade.PayTrades) error {
-	for _, trade := range *trades {
-		err := p.addPayTrade(trade)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func (p *Positions) String() string {
 	j, err := json.Marshal(p)
 	if err != nil {
@@ -102,7 +82,7 @@ func (p *Positions) Compress() *Positions {
 }
 
 func (p *Positions) integrete() *Positions {
-	copy := p.copy()
+	copy := p.Copy()
 	for _, a := range *copy {
 		for _, b := range *copy {
 			if a == b {
@@ -127,31 +107,14 @@ func (p *Positions) filter() *Positions {
 	return ps
 }
 
-func (p *Positions) Diff(dests *Positions) *Positions {
-	copy_src := p.copy()
-	copy_dests := dests.copy()
-	for _, dest := range *copy_dests {
-		for _, src := range *copy_src {
-			src.OffsetIfEqualPosition(dest)
-		}
-	}
-	for _, dest := range *copy_dests {
-		if !dest.IsCompleted() {
-			dest.Quantity *= -1
-			*copy_src = append(*copy_src, dest)
-		}
-	}
-	return copy_src.Compress()
-}
-
-func (p *Positions) sumQuantity() int {
+func (p *Positions) SumQuantity() int {
 	sum := 0
 	for _, pos := range *p {
 		sum += pos.Quantity.Int()
 	}
 	return sum
 }
-func (p *Positions) copy() *Positions {
+func (p *Positions) Copy() *Positions {
 	copy := NewPositions()
 	for _, pos := range *p {
 		cp := Position{}
