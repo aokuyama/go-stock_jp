@@ -13,21 +13,29 @@ func NewPositions() *Positions {
 	return &Positions{}
 }
 
-func (p *Positions) AddPositionTrade(trade *trade.PositionTrade) error {
-	new := NewPositionByTrade(trade)
-	for _, position := range *p {
-		if position.IsEqualPosition(new) {
-			return position.IntegrateIfEqualPosition(new)
+func (p *Positions) AddPosition(position *Position) error {
+	for i, existing := range *p {
+		if existing.IsEqualPosition(position) {
+			ip, err := NewIntegratePosition(existing, position)
+			if err != nil {
+				return err
+			}
+			(*p)[i] = ip
+			return nil
 		}
 	}
-	*p = append(*p, new)
+	*p = append(*p, position)
 	return nil
+}
+
+func (p *Positions) AddPositionTrade(trade *trade.PositionTrade) error {
+	return p.AddPosition(NewPositionByTrade(trade))
 }
 
 func (p *Positions) AddPayTrade(trade *trade.PayTrade) error {
 	for i, position := range *p {
 		if position.IsEqualPay(trade) {
-			new_position, err := NewPositionByPayTrade(position, trade)
+			new_position, err := NewPositionByPositionAndPayTrade(position, trade)
 			if err != nil {
 				return err
 			}
@@ -56,40 +64,10 @@ func (p *Positions) Uncompletes() *Positions {
 	return ps
 }
 
-func (p *Positions) Compress() *Positions {
-	return p.integrete().Uncompletes()
-}
-
-func (p *Positions) integrete() *Positions {
-	copy := p.Copy()
-	for _, a := range *copy {
-		for _, b := range *copy {
-			if a == b {
-				continue
-			}
-			err := a.IntegrateIfEqualPosition(b)
-			if err != nil {
-				panic(err)
-			}
-		}
-	}
-	return copy
-}
-
 func (p *Positions) SumQuantity() int {
 	sum := 0
 	for _, pos := range *p {
 		sum += pos.Quantity.Int()
 	}
 	return sum
-}
-
-func (p *Positions) Copy() *Positions {
-	copy := NewPositions()
-	for _, pos := range *p {
-		cp := Position{}
-		cp = *pos
-		*copy = append(*copy, &cp)
-	}
-	return copy
 }

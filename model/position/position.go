@@ -35,6 +35,7 @@ func NewPosition(position_type string, security_code string, quantity int) (*Pos
 		Quantity:     *q,
 	}, nil
 }
+
 func NewPositionByTrade(t *trade.PositionTrade) *Position {
 	q, err := NewQuantity(t.Quantity.Int())
 	if err != nil {
@@ -46,7 +47,8 @@ func NewPositionByTrade(t *trade.PositionTrade) *Position {
 		Quantity:     *q,
 	}
 }
-func NewPositionByPayTrade(p *Position, t *trade.PayTrade) (*Position, error) {
+
+func NewPositionByPositionAndPayTrade(p *Position, t *trade.PayTrade) (*Position, error) {
 	if !p.IsEqualPay(t) {
 		return nil, errors.New("not equal pay")
 	}
@@ -60,6 +62,22 @@ func NewPositionByPayTrade(p *Position, t *trade.PayTrade) (*Position, error) {
 		Quantity:     *q,
 	}, nil
 }
+
+func NewIntegratePosition(p1 *Position, p2 *Position) (*Position, error) {
+	if !p1.IsEqualPosition(p2) {
+		return nil, errors.New("not equal position")
+	}
+	q, err := NewQuantity(p1.Quantity.Int() + p2.Quantity.Int())
+	if err != nil {
+		return nil, err
+	}
+	return &Position{
+		PositionType: p1.PositionType,
+		SecurityCode: p2.SecurityCode,
+		Quantity:     *q,
+	}, nil
+}
+
 func (p *Position) String() string {
 	j, err := json.Marshal(p)
 	if err != nil {
@@ -90,25 +108,6 @@ func (p *Position) Target() *stock.SecurityCode {
 
 func (p *Position) Type() *order.PositionType {
 	return &p.PositionType
-}
-
-func (p *Position) integrate(position *Position) error {
-	if p == position {
-		return errors.New("same instance")
-	}
-	if !p.IsEqualPosition(position) {
-		return errors.New("not equal position")
-	}
-	p.Quantity += position.Quantity
-	position.Quantity = 0
-	return nil
-}
-
-func (p *Position) IntegrateIfEqualPosition(position *Position) error {
-	if !p.IsEqualPosition(position) {
-		return nil
-	}
-	return p.integrate(position)
 }
 
 func (p *Position) IsEqual(b *Position) bool {

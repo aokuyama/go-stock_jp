@@ -12,11 +12,9 @@ func GetPositionsDiffs(source *position.Positions, dest *position.Positions) ([2
 }
 
 func diff(source *position.Positions, dest *position.Positions) *position.Positions {
-	srcs := source.Compress()
-	dsts := dest.Compress()
 	diffs := position.NewPositions()
-	for _, psrc := range *srcs {
-		if !isIn(psrc, dsts) {
+	for _, psrc := range *source {
+		if !isIn(psrc, dest) {
 			*diffs = append(*diffs, psrc)
 		}
 	}
