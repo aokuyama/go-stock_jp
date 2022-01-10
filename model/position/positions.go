@@ -14,49 +14,36 @@ func NewPositions() *Positions {
 }
 
 func (p *Positions) AddPositionTrade(trade *trade.PositionTrade) error {
+	new := NewPositionByTrade(trade)
 	for _, position := range *p {
-		if position.IsEqualPosition(trade) {
-			return position.IncludePosition(trade)
+		if position.IsEqualPosition(new) {
+			return position.IntegrateIfEqualPosition(new)
 		}
 	}
-	new_pos := Position{
-		PositionType: trade.PositionType,
-		SecurityCode: trade.SecurityCode,
-		Quantity:     trade.Quantity,
-	}
-	*p = append(*p, &new_pos)
+	*p = append(*p, new)
 	return nil
 }
 
 func (p *Positions) AddPayTrade(trade *trade.PayTrade) error {
-	for _, position := range *p {
+	for i, position := range *p {
 		if position.IsEqualPay(trade) {
-			err := position.IncludePay(trade)
+			new_position, err := NewPositionByPayTrade(position, trade)
 			if err != nil {
 				return err
 			}
-			if position.IsError() {
-				return errors.New("over payment")
-			}
+			(*p)[i] = new_position
 			return nil
 		}
 	}
-	new_pos, err := NewErrorPosition(trade)
-	if err != nil {
-		panic(err)
-	}
-	*p = append(*p, new_pos)
 	return errors.New("missing position")
 }
 
-func (p *Positions) Errors() *Positions {
-	ps := NewPositions()
-	for _, position := range *p {
-		if position.IsError() {
-			*ps = append(*ps, position)
-		}
+func (p *Positions) String() string {
+	j, err := json.Marshal(p)
+	if err != nil {
+		panic(err)
 	}
-	return ps
+	return (string)(j)
 }
 
 func (p *Positions) Uncompletes() *Positions {
@@ -69,16 +56,8 @@ func (p *Positions) Uncompletes() *Positions {
 	return ps
 }
 
-func (p *Positions) String() string {
-	j, err := json.Marshal(p)
-	if err != nil {
-		panic(err)
-	}
-	return (string)(j)
-}
-
 func (p *Positions) Compress() *Positions {
-	return p.integrete().filter()
+	return p.integrete().Uncompletes()
 }
 
 func (p *Positions) integrete() *Positions {
@@ -97,16 +76,6 @@ func (p *Positions) integrete() *Positions {
 	return copy
 }
 
-func (p *Positions) filter() *Positions {
-	ps := NewPositions()
-	for _, pos := range *p {
-		if !pos.IsCompleted() {
-			*ps = append(*ps, pos)
-		}
-	}
-	return ps
-}
-
 func (p *Positions) SumQuantity() int {
 	sum := 0
 	for _, pos := range *p {
@@ -114,6 +83,7 @@ func (p *Positions) SumQuantity() int {
 	}
 	return sum
 }
+
 func (p *Positions) Copy() *Positions {
 	copy := NewPositions()
 	for _, pos := range *p {

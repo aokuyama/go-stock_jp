@@ -19,7 +19,7 @@ func TestNewPosition(t *testing.T) {
 }
 func TestErrorNewPosition(t *testing.T) {
 	var err error
-	_, err = NewPosition("margin_buy", "1300", 0)
+	_, err = NewPosition("margin_buy", "1300", -100)
 	assert.Error(t, err)
 	_, err = NewPosition("margin_buy", "300", 1000)
 	assert.Error(t, err)
@@ -41,46 +41,11 @@ func TestIsEqualTarget(t *testing.T) {
 func TestIsEqualPosition(t *testing.T) {
 	var p *Position
 	p, _ = NewPosition("margin_buy", "1300", 100)
-	t1, _ := trade.NewPositionTrade("margin_buy", "1300", 100)
+	t1, _ := NewPosition("margin_buy", "1300", 100)
 	assert.True(t, p.IsEqualPosition(t1), "対象が同じ")
-	t2, _ := trade.NewPositionTrade("spot_buy", "1300", 100)
+	t2, _ := NewPosition("spot_buy", "1300", 100)
 	assert.False(t, p.IsEqualPosition(t2), "対象が同じでも関係ない取引ならfalse")
 }
-
-func TestIncludePosition(t *testing.T) {
-	var err error
-	p, _ := NewPosition("margin_buy", "1300", 400)
-	assert.Equal(t, 400, p.Quantity.Int())
-	t1, _ := trade.NewPositionTrade("margin_buy", "1300", 300)
-	p.IncludePosition(t1)
-	assert.Equal(t, 700, p.Quantity.Int(), "ポジション量が増える")
-	p.IncludePosition(t1)
-	assert.Equal(t, 1000, p.Quantity.Int(), "ポジション量が増える")
-	t2, _ := trade.NewPositionTrade("margin_buy", "1301", 100)
-	err = p.IncludePosition(t2)
-	assert.Equal(t, 1000, p.Quantity.Int())
-	assert.Error(t, err, "関係ない取引は無視")
-	t3, _ := trade.NewPositionTrade("margin_sell", "1300", 100)
-	err = p.IncludePosition(t3)
-	assert.Equal(t, 1000, p.Quantity.Int())
-	assert.Error(t, err, "関係ない取引は無視")
-}
-
-func TestNewErrorPosition(t *testing.T) {
-	var p *trade.PayTrade
-	var ep *Position
-	p, _ = trade.NewPayTrade("spot_sell", "3265", 100)
-	ep, _ = NewErrorPosition(p)
-	assert.True(t, ep.IsEqualPay(p))
-	assert.Equal(t, -100, ep.Quantity.Int())
-	assert.True(t, ep.IsError())
-	p, _ = trade.NewPayTrade("pay_buy", "4265", 1200)
-	ep, _ = NewErrorPosition(p)
-	assert.True(t, ep.IsEqualPay(p))
-	assert.Equal(t, -1200, ep.Quantity.Int())
-	assert.True(t, ep.IsError())
-}
-
 func TestCompletePosition(t *testing.T) {
 	var p *Position
 	p, _ = NewPosition("margin_buy", "1300", 200)
@@ -131,32 +96,39 @@ func TestIntegrateError(t *testing.T) {
 	err = p1.integrate(p4)
 	assert.Error(t, err, "ターゲットが違うと失敗")
 }
-func TestOffset(t *testing.T) {
+func TestNewPositionByTrade(t *testing.T) {
+	pt1, _ := trade.NewPositionTrade("margin_buy", "1300", 200)
+	pos1 := NewPositionByTrade(pt1)
+	assert.Equal(t, "{\"position_type\":\"margin_buy\",\"security_code\":\"1300\",\"quantity\":200}", pos1.String())
+	pt2, _ := trade.NewPositionTrade("spot_buy", "5301", 300)
+	pos2 := NewPositionByTrade(pt2)
+	assert.Equal(t, "{\"position_type\":\"spot_buy\",\"security_code\":\"5301\",\"quantity\":300}", pos2.String())
+}
+func TestNewPositionByPayTrade(t *testing.T) {
 	t.Run("case 1", func(t *testing.T) {
 		p1, _ := NewPosition("margin_buy", "1300", 200)
-		p2, _ := NewPosition("margin_buy", "1300", 300)
-		p3, _ := NewPosition("margin_buy", "1300", 100)
-		p2.offset(p1)
-		assert.Equal(t, 0, p1.Quantity.Int())
-		assert.Equal(t, 100, p2.Quantity.Int())
-		p2.offset(p3)
-		assert.Equal(t, 0, p1.Quantity.Int())
-		assert.Equal(t, 0, p2.Quantity.Int())
-		assert.Equal(t, 0, p3.Quantity.Int())
+		pt1, _ := trade.NewPayTrade("pay_sell", "1300", 100)
+		p2, _ := NewPositionByPayTrade(p1, pt1)
+		assert.Equal(t, "{\"position_type\":\"margin_buy\",\"security_code\":\"1300\",\"quantity\":100}", p2.String())
+		assert.Equal(t, 200, p1.Quantity.Int(), "元のポジションは変化していない")
+		p3, _ := NewPositionByPayTrade(p2, pt1)
+		assert.Equal(t, "{\"position_type\":\"margin_buy\",\"security_code\":\"1300\",\"quantity\":0}", p3.String())
+		assert.Equal(t, 200, p1.Quantity.Int(), "元のポジションは変化していない")
 	})
 	t.Run("error", func(t *testing.T) {
 		var err error
-		p1, _ := NewPosition("margin_buy", "1300", 200)
-		p2, _ := NewPosition("spot_buy", "1300", 300)
-		p3, _ := NewPosition("margin_sell", "1300", 100)
-		p4, _ := NewPosition("margin_buy", "1301", 200)
-		err = p1.offset(p1)
-		assert.Error(t, err, "自分自身が対象だと失敗")
-		err = p1.offset(p2)
+		pos, _ := NewPosition("margin_buy", "1301", 200)
+		pt1, _ := trade.NewPayTrade("pay_buy", "1301", 100)
+		_, err = NewPositionByPayTrade(pos, pt1)
 		assert.Error(t, err, "タイプが違うと失敗")
-		err = p1.offset(p3)
+		pt2, _ := trade.NewPayTrade("spot_sell", "1301", 100)
+		_, err = NewPositionByPayTrade(pos, pt2)
 		assert.Error(t, err, "タイプが違うと失敗")
-		err = p1.offset(p4)
+		pt3, _ := trade.NewPayTrade("pay_sell", "1300", 100)
+		_, err = NewPositionByPayTrade(pos, pt3)
 		assert.Error(t, err, "ターゲットが違うと失敗")
+		pt4, _ := trade.NewPayTrade("pay_sell", "1301", 300)
+		_, err = NewPositionByPayTrade(pos, pt4)
+		assert.Error(t, err, "数量が超過していると失敗")
 	})
 }

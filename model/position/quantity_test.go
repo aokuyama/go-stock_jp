@@ -1,4 +1,4 @@
-package order
+package position
 
 import (
 	"testing"
@@ -12,6 +12,8 @@ func TestEnabledQuantity(t *testing.T) {
 	assert.Equal(t, 100, int(*q), "100の倍数であれば有効")
 	q, _ = NewQuantity(1100)
 	assert.Equal(t, 1100, int(*q), "100の倍数であれば有効")
+	q, _ = NewQuantity(0)
+	assert.Equal(t, 0, int(*q), "0でも有効")
 }
 
 func TestDisabledQuantity(t *testing.T) {
@@ -20,8 +22,6 @@ func TestDisabledQuantity(t *testing.T) {
 	assert.Error(t, err, "100の倍数でないためエラー")
 	_, err = NewQuantity(2010)
 	assert.Error(t, err, "100の倍数でないためエラー")
-	_, err = NewQuantity(0)
-	assert.Error(t, err, "0はエラー")
 	_, err = NewQuantity(-100)
 	assert.Error(t, err, "0未満はエラー")
 }

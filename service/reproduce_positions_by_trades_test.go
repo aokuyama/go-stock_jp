@@ -48,6 +48,5 @@ func TestImportAllTrade(t *testing.T) {
 	assert.Equal(t, 4, len(*ps.Uncompletes()))
 	addPayTrades(ps, &ts.Pays)
 	assert.Equal(t, 4, len(*ps), "ポジションが生成される")
-	assert.Equal(t, 0, len(*ps.Errors()), "エラーなし")
 	assert.Equal(t, 0, len(*ps.Uncompletes()), "未完成なし")
 }

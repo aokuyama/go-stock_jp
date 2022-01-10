@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPickNewPosition(t *testing.T) {
+func TestAddPositionTrade(t *testing.T) {
 	ps := NewPositions()
 	assert.Equal(t, 0, len(*ps))
 	t1, _ := trade.NewPositionTrade("spot_buy", "1234", 100)
@@ -49,25 +49,15 @@ func TestAddPayTrade(t *testing.T) {
 func TestErrorPayTrade(t *testing.T) {
 	var err error
 	ps := NewPositions()
-	assert.Equal(t, 0, len(*ps.Errors()))
 	py, _ := trade.NewPayTrade("spot_sell", "1234", 100)
 	err = ps.AddPayTrade(py)
-	assert.Error(t, err)
-	assert.Equal(t, 1, len(*ps.Errors()), "対象がないためエラーが追加される")
-	ep := (*ps.Errors())[0]
-	assert.Equal(t, -100, ep.Quantity.Int())
+	assert.Error(t, err, "対象がないためエラー")
 	po, _ := trade.NewPositionTrade("margin_buy", "1234", 100)
 	ps.AddPositionTrade(po)
 	py2, _ := trade.NewPayTrade("pay_sell", "2234", 100)
 	err = ps.AddPayTrade(py2)
-	assert.Error(t, err)
-	assert.Equal(t, 2, len(*ps.Errors()), "対象がないためエラーが追加される")
-	err = ps.AddPayTrade(py)
-	assert.Error(t, err, "エラーポジションへ更に追加")
-	assert.Equal(t, -200, ep.Quantity.Int())
-	assert.Equal(t, 2, len(*ps.Errors()), "エラーとはいえ対象があったため、エラーが追加されない")
+	assert.Error(t, err, "対象がないためエラー")
 }
-
 func TestOverPayTrade(t *testing.T) {
 	var err error
 	ps := NewPositions()
@@ -78,8 +68,7 @@ func TestOverPayTrade(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, 100, (*ps)[0].Quantity.Int(), "手仕舞われた分だけ減少している")
 	err = ps.AddPayTrade(py)
-	assert.Error(t, err)
-	assert.Equal(t, -100, (*ps)[0].Quantity.Int(), "マイナスになってしまっている")
+	assert.Error(t, err, "マイナスになってしまっている")
 }
 
 func TestCompress(t *testing.T) {
