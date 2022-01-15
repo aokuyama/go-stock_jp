@@ -32,3 +32,19 @@ func TestDisabledFormat(t *testing.T) {
 	_, err = NewDate("2000-1-1")
 	assert.Error(t, err)
 }
+
+func TestDateBefore(t *testing.T) {
+	d1, _ := NewDate("2021-01-01")
+	d2, _ := NewDate("2021-01-02")
+	assert.True(t, d1.Before(d2))
+	assert.False(t, d2.Before(d1))
+	assert.False(t, d1.Before(d1))
+}
+
+func TestDateAfter(t *testing.T) {
+	d1, _ := NewDate("2020-09-13")
+	d2, _ := NewDate("2020-09-14")
+	assert.False(t, d1.After(d2))
+	assert.True(t, d2.After(d1))
+	assert.False(t, d1.After(d1))
+}

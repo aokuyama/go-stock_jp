@@ -30,3 +30,11 @@ func (d *Date) MarshalJSON() ([]byte, error) {
 func (d *Date) IsEqual(date *Date) bool {
 	return d.String() == date.String()
 }
+
+func (d *Date) Before(date *Date) bool {
+	return d.Time().Before(date.Time())
+}
+
+func (d *Date) After(date *Date) bool {
+	return d.Time().After(date.Time())
+}
