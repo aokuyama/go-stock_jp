@@ -3,6 +3,8 @@ package calendar
 import (
 	"errors"
 	"sort"
+
+	"github.com/aokuyama/go-stock_jp/common"
 )
 
 type Calendar struct {
@@ -32,6 +34,9 @@ func (a ByDate) Swap(i, j int) {
 }
 
 func (c *Calendar) setDates(dates *[]*Date) error {
+	if dates == nil {
+		return nil
+	}
 	for _, d := range *dates {
 		for _, sd := range c.dates {
 			if d.isEqualDate(sd) {
@@ -41,5 +46,33 @@ func (c *Calendar) setDates(dates *[]*Date) error {
 		c.dates = append(c.dates, d)
 	}
 	sort.Sort(ByDate(c.dates))
+	return nil
+}
+
+func (c *Calendar) TradeDays() *[]*common.Date {
+	var dates []*common.Date
+	for _, d := range c.dates {
+		if d.IsTradeDay() {
+			dates = append(dates, &d.date)
+		}
+	}
+	return &dates
+}
+
+func (c *Calendar) TradeDayOnAfterTomorrow(today *common.Date) *common.Date {
+	for _, d := range *c.TradeDays() {
+		if d.After(today) {
+			return d
+		}
+	}
+	return nil
+}
+
+func (c *Calendar) TradeDayOnAfterToday(today *common.Date) *common.Date {
+	for _, d := range *c.TradeDays() {
+		if !d.Before(today) {
+			return d
+		}
+	}
 	return nil
 }

@@ -2,6 +2,7 @@ package common
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -47,4 +48,13 @@ func TestDateAfter(t *testing.T) {
 	assert.False(t, d1.After(d2))
 	assert.True(t, d2.After(d1))
 	assert.False(t, d1.After(d1))
+}
+
+func TestNewDateAdded(t *testing.T) {
+	d1, _ := NewDate("2021-01-16")
+	assert.Equal(t, "2021-01-16", d1.String())
+	assert.Equal(t, "2021-01-17", NewDateAdded(d1, time.Hour*24*1).String())
+	assert.Equal(t, "2021-01-16", d1.String(), "元の日付は変更されない")
+	assert.Equal(t, "2021-01-11", NewDateAdded(d1, -time.Hour*24*5).String())
+	assert.Equal(t, "2021-01-16", d1.String(), "元の日付は変更されない")
 }

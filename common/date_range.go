@@ -16,12 +16,16 @@ func NewDateRange(begin string, end string) (*DateRange, error) {
 	if err != nil {
 		return nil, err
 	}
-	if b.Time().After(e.Time()) {
-		return nil, errors.New("invalid date range:" + begin + " ~ " + end)
+	return NewDateRangeByDates(b, e)
+}
+
+func NewDateRangeByDates(begin *Date, end *Date) (*DateRange, error) {
+	if begin.Time().After(end.Time()) {
+		return nil, errors.New("invalid date range:" + begin.String() + " ~ " + end.String())
 	}
 	return &DateRange{
-		begin: *b,
-		end:   *e,
+		begin: *begin,
+		end:   *end,
 	}, nil
 }
 

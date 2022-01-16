@@ -7,7 +7,7 @@ type Date struct {
 	isHoliday bool
 }
 
-func newDate(date string, isHoliday bool) (*Date, error) {
+func NewDate(date string, isHoliday bool) (*Date, error) {
 	d, err := common.NewDate(date)
 	if err != nil {
 		return nil, err
@@ -24,4 +24,8 @@ func (d *Date) isEqual(date *Date) bool {
 
 func (d *Date) isEqualDate(date *Date) bool {
 	return d.date.IsEqual(&date.date)
+}
+
+func (d *Date) IsTradeDay() bool {
+	return !d.isHoliday
 }

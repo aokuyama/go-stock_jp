@@ -15,6 +15,12 @@ func NewDate(v string) (*Date, error) {
 	return &d, nil
 }
 
+func NewDateAdded(date *Date, plus time.Duration) *Date {
+	t := date.Time()
+	d := Date(t.Add(plus))
+	return &d
+}
+
 func (d *Date) String() string {
 	return time.Time(*d).Format("2006-01-02")
 }
