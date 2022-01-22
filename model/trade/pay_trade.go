@@ -4,17 +4,18 @@ import (
 	"encoding/json"
 
 	"github.com/aokuyama/go-stock_jp/model/order"
+	"github.com/aokuyama/go-stock_jp/model/order/ordertype"
 	"github.com/aokuyama/go-stock_jp/model/stock"
 )
 
 type PayTrade struct {
-	PayType      order.PayType
+	PayType      ordertype.PayType
 	SecurityCode stock.SecurityCode
 	Quantity     order.Quantity
 }
 
 func NewPayTrade(trade_type string, security_code string, quantity int) (*PayTrade, error) {
-	t, err := order.NewPayType(trade_type)
+	t, err := ordertype.NewPayType(trade_type)
 	if err != nil {
 		return nil, err
 	}

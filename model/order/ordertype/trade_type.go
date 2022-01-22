@@ -1,4 +1,4 @@
-package order
+package ordertype
 
 import (
 	"errors"
@@ -8,6 +8,8 @@ type TradeType interface {
 	String() string
 	IsPosition() bool
 	IsPay() bool
+	IsSpot() bool
+	IsMargin() bool
 }
 
 func NewTradeType(v string) (TradeType, error) {

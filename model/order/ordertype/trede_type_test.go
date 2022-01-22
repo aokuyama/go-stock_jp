@@ -1,4 +1,4 @@
-package order
+package ordertype
 
 import (
 	"testing"
@@ -29,19 +29,31 @@ func TestTradeTypeIsPositionOrPay(t *testing.T) {
 	tt, _ = NewTradeType("spot_buy")
 	assert.True(t, tt.IsPosition())
 	assert.False(t, tt.IsPay())
+	assert.True(t, tt.IsSpot())
+	assert.False(t, tt.IsMargin())
 	tt, _ = NewTradeType("spot_sell")
 	assert.True(t, tt.IsPay())
 	assert.False(t, tt.IsPosition())
+	assert.True(t, tt.IsSpot())
+	assert.False(t, tt.IsMargin())
 	tt, _ = NewTradeType("margin_buy")
 	assert.True(t, tt.IsPosition())
 	assert.False(t, tt.IsPay())
+	assert.False(t, tt.IsSpot())
+	assert.True(t, tt.IsMargin())
 	tt, _ = NewTradeType("pay_sell")
 	assert.True(t, tt.IsPay())
 	assert.False(t, tt.IsPosition())
+	assert.False(t, tt.IsSpot())
+	assert.True(t, tt.IsMargin())
 	tt, _ = NewTradeType("margin_sell")
 	assert.True(t, tt.IsPosition())
 	assert.False(t, tt.IsPay())
+	assert.False(t, tt.IsSpot())
+	assert.True(t, tt.IsMargin())
 	tt, _ = NewTradeType("pay_buy")
 	assert.True(t, tt.IsPay())
 	assert.False(t, tt.IsPosition())
+	assert.False(t, tt.IsSpot())
+	assert.True(t, tt.IsMargin())
 }

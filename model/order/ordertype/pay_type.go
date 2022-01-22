@@ -1,4 +1,4 @@
-package order
+package ordertype
 
 import (
 	"errors"
@@ -27,6 +27,14 @@ func (p *PayType) IsPosition() bool {
 
 func (p *PayType) IsPay() bool {
 	return true
+}
+
+func (p *PayType) IsSpot() bool {
+	return p.String() == "spot_sell"
+}
+
+func (p *PayType) IsMargin() bool {
+	return !p.IsSpot()
 }
 
 func GetPayTypes() [3]string {
