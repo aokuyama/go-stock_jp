@@ -1,7 +1,9 @@
-package trade
+package trade_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/model/trade"
 
 	"github.com/stretchr/testify/assert"
 )

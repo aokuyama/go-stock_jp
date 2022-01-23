@@ -1,7 +1,9 @@
-package ordertype
+package ordertype_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/model/order/ordertype"
 
 	"github.com/stretchr/testify/assert"
 )

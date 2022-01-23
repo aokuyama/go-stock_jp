@@ -6,12 +6,12 @@ import (
 
 func GetPositionsDiffs(source *position.Positions, dest *position.Positions) ([2]*position.Positions, error) {
 	var result [2]*position.Positions
-	result[0] = diff(source, dest)
-	result[1] = diff(dest, source)
+	result[0] = DiffPositions(source, dest)
+	result[1] = DiffPositions(dest, source)
 	return result, nil
 }
 
-func diff(source *position.Positions, dest *position.Positions) *position.Positions {
+func DiffPositions(source *position.Positions, dest *position.Positions) *position.Positions {
 	diffs := position.NewPositions()
 	for _, psrc := range *source {
 		if !isIn(psrc, dest) {

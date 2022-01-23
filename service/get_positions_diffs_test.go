@@ -1,7 +1,9 @@
-package service
+package service_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/service"
 
 	"github.com/aokuyama/go-stock_jp/model/position"
 	"github.com/stretchr/testify/assert"
@@ -18,9 +20,9 @@ func TestDiff(t *testing.T) {
 		*ps1 = append(*ps1, p1, p2, p3, p4, p5)
 		ps2 := position.NewPositions()
 		*ps2 = append(*ps2, p5, p4, p3, p2, p1)
-		diff1 := diff(ps1, ps2)
+		diff1 := DiffPositions(ps1, ps2)
 		assert.Equal(t, 0, len(*diff1), diff1.String())
-		diff2 := diff(ps1, ps2)
+		diff2 := DiffPositions(ps1, ps2)
 		assert.Equal(t, 0, len(*diff2), diff2.String())
 	})
 
@@ -41,10 +43,10 @@ func TestDiff(t *testing.T) {
 		ps2.AddPosition(p2)
 		ps2.AddPosition(p3)
 		ps2.AddPosition(p5)
-		diff1 := diff(ps1, ps2)
+		diff1 := DiffPositions(ps1, ps2)
 		assert.Equal(t, 1, len(*diff1))
 		assert.Equal(t, 300, (*diff1)[0].Quantity.Int())
-		diff2 := diff(ps2, ps1)
+		diff2 := DiffPositions(ps2, ps1)
 		assert.Equal(t, 1, len(*diff2))
 		assert.Equal(t, 200, (*diff2)[0].Quantity.Int())
 	})
@@ -63,10 +65,10 @@ func TestDiff(t *testing.T) {
 		ps2.AddPosition(p4)
 		assert.Equal(t, 1200, ps1.SumQuantity())
 		assert.Equal(t, 900, ps2.SumQuantity())
-		diff1 := diff(ps1, ps2)
+		diff1 := DiffPositions(ps1, ps2)
 		assert.Equal(t, 1, len(*diff1))
 		assert.Equal(t, 500, (*diff1)[0].Quantity.Int())
-		diff2 := diff(ps2, ps1)
+		diff2 := DiffPositions(ps2, ps1)
 		assert.Equal(t, 1, len(*diff2))
 		assert.Equal(t, 200, (*diff2)[0].Quantity.Int())
 		assert.Equal(t, 3, len(*ps1))

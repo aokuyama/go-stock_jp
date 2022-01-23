@@ -1,8 +1,9 @@
-package stock
+package stock_test
 
 import (
 	"testing"
 
+	. "github.com/aokuyama/go-stock_jp/model/stock"
 	"github.com/stretchr/testify/assert"
 )
 

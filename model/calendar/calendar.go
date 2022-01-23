@@ -8,10 +8,10 @@ import (
 )
 
 type Calendar struct {
-	dates []*Date
+	Dates []*Date
 }
 
-func NewCalendar(dates *[]*Date) (*Calendar, error) {
+func New(dates *[]*Date) (*Calendar, error) {
 	var err error
 	c := Calendar{}
 	err = c.setDates(dates)
@@ -27,7 +27,7 @@ func (d ByDate) Len() int {
 	return len(d)
 }
 func (d ByDate) Less(i, j int) bool {
-	return d[i].date.String() < d[j].date.String()
+	return d[i].Date.String() < d[j].Date.String()
 }
 func (a ByDate) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
@@ -38,22 +38,22 @@ func (c *Calendar) setDates(dates *[]*Date) error {
 		return nil
 	}
 	for _, d := range *dates {
-		for _, sd := range c.dates {
-			if d.isEqualDate(sd) {
-				return errors.New("duplicate date:" + d.date.String())
+		for _, sd := range c.Dates {
+			if d.IsEqualDate(sd) {
+				return errors.New("duplicate date:" + d.Date.String())
 			}
 		}
-		c.dates = append(c.dates, d)
+		c.Dates = append(c.Dates, d)
 	}
-	sort.Sort(ByDate(c.dates))
+	sort.Sort(ByDate(c.Dates))
 	return nil
 }
 
 func (c *Calendar) TradeDays() *[]*common.Date {
 	var dates []*common.Date
-	for _, d := range c.dates {
+	for _, d := range c.Dates {
 		if d.IsTradeDay() {
-			dates = append(dates, &d.date)
+			dates = append(dates, &d.Date)
 		}
 	}
 	return &dates

@@ -9,12 +9,12 @@ import (
 )
 
 type GetTradeDayService struct {
-	repository calendar.CalendarRepository
+	Repository calendar.CalendarRepository
 }
 
 func NewGetTradeDayService(repository calendar.CalendarRepository) *GetTradeDayService {
 	return &GetTradeDayService{
-		repository: repository,
+		Repository: repository,
 	}
 }
 
@@ -26,7 +26,7 @@ func (s *GetTradeDayService) getCalendar(begin *common.Date) (*calendar.Calendar
 	if err != nil {
 		return nil, err
 	}
-	return s.repository.LoadByDateRange(r)
+	return s.Repository.LoadByDateRange(r)
 }
 
 func (s *GetTradeDayService) GetTradeDayOnAfterTomorrow(today string) (*common.Date, error) {

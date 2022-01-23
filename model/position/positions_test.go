@@ -1,8 +1,9 @@
-package position
+package position_test
 
 import (
 	"testing"
 
+	. "github.com/aokuyama/go-stock_jp/model/position"
 	"github.com/aokuyama/go-stock_jp/model/trade"
 
 	"github.com/stretchr/testify/assert"

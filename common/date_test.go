@@ -1,8 +1,10 @@
-package common
+package common_test
 
 import (
 	"testing"
 	"time"
+
+	. "github.com/aokuyama/go-stock_jp/common"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -1,7 +1,9 @@
-package stock
+package stock_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/model/stock"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -18,6 +20,8 @@ func TestDisabledCode(t *testing.T) {
 	_, err = NewSecurityCode("900")
 	assert.Error(t, err)
 	_, err = NewSecurityCode("10000")
+	assert.Error(t, err)
+	_, err = NewSecurityCode("")
 	assert.Error(t, err)
 }
 

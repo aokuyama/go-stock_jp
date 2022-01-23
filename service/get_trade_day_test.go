@@ -1,7 +1,9 @@
-package service
+package service_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/service"
 
 	"github.com/aokuyama/go-stock_jp/common"
 	"github.com/aokuyama/go-stock_jp/model/calendar"
@@ -21,14 +23,14 @@ func getNewTestGetTradeDayService(t *testing.T) *GetTradeDayService {
 func TestGetTradeDay(t *testing.T) {
 	s := getNewTestGetTradeDayService(t)
 	ex, _ := common.NewDateRange("2022-01-16", "2022-01-30")
-	s.repository.(*mock.MockCalendarRepository).EXPECT().
+	s.Repository.(*mock.MockCalendarRepository).EXPECT().
 		LoadByDateRange(ex).
 		Return(newCalendar(), nil)
 	t.Run("after tomorrow", func(t *testing.T) {
 		r, _ := s.GetTradeDayOnAfterTomorrow("2022-01-16")
 		assert.Equal(t, "2022-01-18", r.String())
 	})
-	s.repository.(*mock.MockCalendarRepository).EXPECT().
+	s.Repository.(*mock.MockCalendarRepository).EXPECT().
 		LoadByDateRange(ex).
 		Return(newCalendar(), nil)
 	t.Run("after today", func(t *testing.T) {
@@ -43,7 +45,7 @@ func newCalendar() *calendar.Calendar {
 	d3, _ := calendar.NewDate("2022-01-18", false)
 	var dates []*calendar.Date
 	dates = append(dates, d1, d2, d3)
-	c, _ := calendar.NewCalendar(&dates)
+	c, _ := calendar.New(&dates)
 	return c
 }
 
@@ -57,7 +59,7 @@ func TestErrorGetTradeDayOnAfterTomorrow(t *testing.T) {
 	assert.Nil(t, r2)
 	t.Run("not found", func(t *testing.T) {
 		ex, _ := common.NewDateRange("2022-01-19", "2022-02-02")
-		s.repository.(*mock.MockCalendarRepository).EXPECT().
+		s.Repository.(*mock.MockCalendarRepository).EXPECT().
 			LoadByDateRange(ex).
 			Return(newCalendar(), nil)
 		r, err := s.GetTradeDayOnAfterTomorrow("2022-01-19")
@@ -66,7 +68,7 @@ func TestErrorGetTradeDayOnAfterTomorrow(t *testing.T) {
 	})
 	t.Run("not found", func(t *testing.T) {
 		ex, _ := common.NewDateRange("2022-01-19", "2022-02-02")
-		s.repository.(*mock.MockCalendarRepository).EXPECT().
+		s.Repository.(*mock.MockCalendarRepository).EXPECT().
 			LoadByDateRange(ex).
 			Return(newCalendar(), nil)
 		r, err := s.GetTradeDayOnAfterToday("2022-01-19")

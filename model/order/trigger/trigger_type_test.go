@@ -1,7 +1,9 @@
-package trigger
+package trigger_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/model/order/trigger"
 
 	"github.com/stretchr/testify/assert"
 )

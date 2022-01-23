@@ -1,7 +1,9 @@
-package ordertype
+package ordertype_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/model/order/ordertype"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -18,10 +20,16 @@ func TestEnabledPositionType(t *testing.T) {
 
 func TestDisabledPositionType(t *testing.T) {
 	var err error
-	_, err = NewPositionType("margin_buyy")
+	var pt *PositionType
+	pt, err = NewPositionType("margin_buyy")
 	assert.Error(t, err)
+	assert.Nil(t, pt)
 	_, err = NewPositionType("pay_buy")
 	assert.Error(t, err)
+	assert.Nil(t, pt)
+	_, err = NewPositionType("")
+	assert.Error(t, err)
+	assert.Nil(t, pt)
 }
 
 func TestEqualPosition(t *testing.T) {

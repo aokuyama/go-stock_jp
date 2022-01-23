@@ -1,7 +1,9 @@
-package service
+package service_test
 
 import (
 	"testing"
+
+	. "github.com/aokuyama/go-stock_jp/service"
 
 	"github.com/aokuyama/go-stock_jp/model/position"
 	"github.com/aokuyama/go-stock_jp/model/trade"
@@ -12,12 +14,12 @@ import (
 func TestAddPositionTrades(t *testing.T) {
 	ts := trade.NewTrades()
 	ps := position.NewPositions()
-	addPositionTrades(ps, &ts.Positions)
+	AddPositionTrades(ps, &ts.Positions)
 	assert.Equal(t, 0, len(*ps))
 	ts.AddNewTrade("spot_buy", "1234", 100)
 	ts.AddNewTrade("spot_buy", "1235", 100)
 	ts.AddNewTrade("margin_buy", "1235", 100)
-	addPositionTrades(ps, &ts.Positions)
+	AddPositionTrades(ps, &ts.Positions)
 	assert.Equal(t, 3, len(*ps), "ポジションが生成される")
 }
 func TestCollectPositions(t *testing.T) {
@@ -25,7 +27,7 @@ func TestCollectPositions(t *testing.T) {
 	ps := position.NewPositions()
 	ts.AddNewTrade("spot_buy", "1234", 100)
 	ts.AddNewTrade("spot_buy", "1234", 100)
-	addPositionTrades(ps, &ts.Positions)
+	AddPositionTrades(ps, &ts.Positions)
 	assert.Equal(t, 1, len(*ps), "同じポジションはまとめられる")
 	assert.Equal(t, 200, (*ps)[0].Quantity.Int(), "同じポジションはまとめられる")
 }
@@ -44,9 +46,9 @@ func TestImportAllTrade(t *testing.T) {
 	ts.AddNewTrade("pay_sell", "1234", 100)
 	ts.AddNewTrade("spot_sell", "1234", 1000)
 	ts.AddNewTrade("pay_sell", "2534", 200)
-	addPositionTrades(ps, &ts.Positions)
+	AddPositionTrades(ps, &ts.Positions)
 	assert.Equal(t, 4, len(*ps.Uncompletes()))
-	addPayTrades(ps, &ts.Pays)
+	AddPayTrades(ps, &ts.Pays)
 	assert.Equal(t, 4, len(*ps), "ポジションが生成される")
 	assert.Equal(t, 0, len(*ps.Uncompletes()), "未完成なし")
 }
