@@ -7,7 +7,7 @@ type Stock struct {
 	Market       Market
 }
 
-func NewStock(security_code string, market string) (*Stock, error) {
+func New(security_code string, market string) (*Stock, error) {
 	s, err := NewSecurityCode(security_code)
 	if err != nil {
 		return nil, err

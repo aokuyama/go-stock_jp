@@ -15,7 +15,7 @@ type Position struct {
 	Quantity     Quantity               `json:"quantity"`
 }
 
-func NewPosition(position_type string, security_code string, quantity int) (*Position, error) {
+func New(position_type string, security_code string, quantity int) (*Position, error) {
 	var err error
 	p, err := ordertype.NewPositionType(position_type)
 	if err != nil {

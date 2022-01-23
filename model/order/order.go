@@ -50,7 +50,7 @@ func New(
 			return nil, err
 		}
 	}
-	s, err := stock.NewStock(security_code, market)
+	s, err := stock.New(security_code, market)
 	if err != nil {
 		return nil, err
 	}
