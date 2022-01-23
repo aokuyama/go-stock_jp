@@ -1,4 +1,4 @@
-package order
+package trigger
 
 import (
 	"errors"
@@ -16,12 +16,14 @@ func NewTriggerType(v string) (*TriggerType, error) {
 	}
 	return nil, errors.New("Invalid trigger type:" + v)
 }
+
 func GetTriggerTypes() [2]string {
 	return [...]string{
 		"more",
 		"less",
 	}
 }
+
 func (tt *TriggerType) String() string {
 	return string(*tt)
 }

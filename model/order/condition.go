@@ -4,19 +4,19 @@ import (
 	"errors"
 )
 
-type OrderCondition string
+type Condition string
 
-func NewOrderCondition(v string) (*OrderCondition, error) {
-	types := GetOrderConditions()
+func NewCondition(v string) (*Condition, error) {
+	types := GetConditions()
 	for _, t := range types {
 		if v == t {
-			c := OrderCondition(v)
+			c := Condition(v)
 			return &c, nil
 		}
 	}
 	return nil, errors.New("Invalid order condition:" + v)
 }
-func GetOrderConditions() [4]string {
+func GetConditions() [4]string {
 	return [...]string{
 		"normal",
 		"open",
@@ -24,6 +24,6 @@ func GetOrderConditions() [4]string {
 		"close_bid",
 	}
 }
-func (c *OrderCondition) String() string {
+func (c *Condition) String() string {
 	return string(*c)
 }
