@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/aokuyama/go-generic_subdomains/errs"
-	"github.com/aokuyama/go-stock_jp/common"
+	"github.com/aokuyama/go-stock_jp/model/common"
 	"github.com/aokuyama/go-stock_jp/model/order/ordertype"
 	"github.com/aokuyama/go-stock_jp/model/order/trigger"
 	"github.com/aokuyama/go-stock_jp/model/stock"

@@ -7,8 +7,8 @@ package mock
 import (
 	reflect "reflect"
 
-	common "github.com/aokuyama/go-stock_jp/common"
 	calendar "github.com/aokuyama/go-stock_jp/model/calendar"
+	common "github.com/aokuyama/go-stock_jp/model/common"
 	gomock "github.com/golang/mock/gomock"
 )
 

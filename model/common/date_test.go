@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/aokuyama/go-stock_jp/common"
+	. "github.com/aokuyama/go-stock_jp/model/common"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"sort"
 
-	"github.com/aokuyama/go-stock_jp/common"
+	"github.com/aokuyama/go-stock_jp/model/common"
 )
 
 type Calendar struct {

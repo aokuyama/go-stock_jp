@@ -1,6 +1,6 @@
 package calendar
 
-import "github.com/aokuyama/go-stock_jp/common"
+import "github.com/aokuyama/go-stock_jp/model/common"
 
 type Date struct {
 	Date      common.Date

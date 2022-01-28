@@ -5,9 +5,9 @@ import (
 
 	. "github.com/aokuyama/go-stock_jp/service"
 
-	"github.com/aokuyama/go-stock_jp/common"
 	"github.com/aokuyama/go-stock_jp/model/calendar"
 	"github.com/aokuyama/go-stock_jp/model/calendar/mock"
+	"github.com/aokuyama/go-stock_jp/model/common"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/aokuyama/go-stock_jp/common"
 	"github.com/aokuyama/go-stock_jp/model/calendar"
+	"github.com/aokuyama/go-stock_jp/model/common"
 )
 
 type GetTradeDayService struct {
