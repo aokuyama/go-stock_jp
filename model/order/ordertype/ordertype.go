@@ -2,6 +2,9 @@ package ordertype
 
 import (
 	"encoding/json"
+
+	"github.com/aokuyama/go-generic_subdomains/errs"
+
 	"errors"
 )
 
@@ -11,18 +14,18 @@ type Ordertype struct {
 }
 
 func New(trade string, margin string) (*Ordertype, error) {
+	errs := errs.New()
 	t, err := NewTradeType(trade)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	var m *MarginType
 	if margin == "" {
 		m = nil
 	} else {
 		m, err = NewMarginType(margin)
+		errs.Append(err)
 	}
-	if err != nil {
-		return nil, err
+	if errs.Err() != nil {
+		return nil, errs.Err()
 	}
 	ot := Ordertype{
 		t,

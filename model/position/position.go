@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/aokuyama/go-generic_subdomains/errs"
 	"github.com/aokuyama/go-stock_jp/model/order/ordertype"
 	"github.com/aokuyama/go-stock_jp/model/stock"
 	"github.com/aokuyama/go-stock_jp/model/trade"
@@ -16,18 +17,15 @@ type Position struct {
 }
 
 func New(position_type string, security_code string, quantity int) (*Position, error) {
-	var err error
+	errs := errs.New()
 	p, err := ordertype.NewPositionType(position_type)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	s, err := stock.NewSecurityCode(security_code)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	q, err := NewQuantity(quantity)
-	if err != nil {
-		return nil, err
+	errs.Append(err)
+	if errs.Err() != nil {
+		return nil, errs.Err()
 	}
 	return &Position{
 		PositionType: *p,

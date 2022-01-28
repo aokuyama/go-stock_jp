@@ -1,6 +1,10 @@
 package stock
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/aokuyama/go-generic_subdomains/errs"
+)
 
 type Stock struct {
 	SequrityCode SecurityCode
@@ -8,13 +12,13 @@ type Stock struct {
 }
 
 func New(security_code string, market string) (*Stock, error) {
+	errs := errs.New()
 	s, err := NewSecurityCode(security_code)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	m, err := NewMarket(market)
-	if err != nil {
-		return nil, err
+	errs.Append(err)
+	if errs.Err() != nil {
+		return nil, errs.Err()
 	}
 	return &Stock{
 		*s,

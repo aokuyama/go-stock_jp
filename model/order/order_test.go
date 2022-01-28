@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestOrder(t *testing.T) {
+func TestEnableOrder(t *testing.T) {
 	var o *Order
 	var err error
 	o, err = New(0, "9856", "jpx", "margin_buy", "system", "normal", 0, "more", 100, 200, "2022-01-24", "afternoon", "completed", false)
@@ -18,10 +18,43 @@ func TestOrder(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestErrorOrdertype(t *testing.T) {
+func TestErrorOrder(t *testing.T) {
 	var o *Order
 	var err error
-	o, err = New(1, "", "jpx", "spot_buy", "", "normal", 100, "", 0, 100, "2022-01-23", "morning", "waiting", false)
+	o, err = New(1, "132", "jpx", "spot_buy", "", "open", 5, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "", "spot_buy", "", "open", 5, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "", "", "open", 5, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "system", "open", 5, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "", 5, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", -1, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", 5, "a", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", 5, "", 1, 100, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", 5, "", 0, 0, "2022-01-23", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", 5, "", 0, 100, "", "morning", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", 5, "", 0, 100, "2022-01-23", "", "not_ordered", true)
+	assert.Nil(t, o)
+	assert.Error(t, err)
+	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", 5, "", 0, 100, "2022-01-23", "", "", true)
 	assert.Nil(t, o)
 	assert.Error(t, err)
 }

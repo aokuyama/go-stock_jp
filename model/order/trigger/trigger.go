@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/aokuyama/go-generic_subdomains/errs"
 	"github.com/aokuyama/go-stock_jp/model/stock"
 )
 
@@ -16,17 +17,17 @@ func New(ttype string, price float64) (*Trigger, error) {
 	var t *TriggerType
 	var p *stock.StockPrice
 	var err error
-	t, err = NewTriggerType(ttype)
+	errs := errs.New()
 	if ttype != "" {
-		if err != nil {
-			return nil, err
-		}
+		t, err = NewTriggerType(ttype)
+		errs.Append(err)
 	}
-	p, err = stock.NewStockPrice(price)
 	if price != 0 {
-		if err != nil {
-			return nil, err
-		}
+		p, err = stock.NewStockPrice(price)
+		errs.Append(err)
+	}
+	if errs.Err() != nil {
+		return nil, errs.Err()
 	}
 	trigger := Trigger{t, p}
 	if trigger.Error() != "" {

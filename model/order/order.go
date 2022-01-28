@@ -3,6 +3,7 @@ package order
 import (
 	"encoding/json"
 
+	"github.com/aokuyama/go-generic_subdomains/errs"
 	"github.com/aokuyama/go-stock_jp/common"
 	"github.com/aokuyama/go-stock_jp/model/order/ordertype"
 	"github.com/aokuyama/go-stock_jp/model/order/trigger"
@@ -42,51 +43,35 @@ func New(
 	isCancel bool,
 ) (*Order, error) {
 	var err error
+	var errs = errs.New()
 	var i *OrderID
 	var b *stock.StockPrice
 	if id != 0 {
 		i, err = NewOrderID(id)
-		if err != nil {
-			return nil, err
-		}
+		errs.Append(err)
 	}
 	s, err := stock.New(security_code, market)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	ot, err := ordertype.New(trade_type, margin_type)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	c, err := NewCondition(condition)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	if bid != 0 {
 		b, err = stock.NewStockPrice(bid)
-		if err != nil {
-			return nil, err
-		}
+		errs.Append(err)
 	}
 	t, err := trigger.New(trigger_type, trigger_price)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	q, err := NewQuantity(quantity)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	d, err := common.NewDate(date)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	se, err := NewSession(session)
-	if err != nil {
-		return nil, err
-	}
+	errs.Append(err)
 	st, err := NewStatus(status)
-	if err != nil {
-		return nil, err
+	errs.Append(err)
+	if errs.Err() != nil {
+		return nil, errs.Err()
 	}
 	o := Order{
 		i,
