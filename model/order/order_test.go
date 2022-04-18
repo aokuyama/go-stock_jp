@@ -58,3 +58,10 @@ func TestErrorOrder(t *testing.T) {
 	assert.Nil(t, o)
 	assert.Error(t, err)
 }
+func TestCanBeOrdered(t *testing.T) {
+	var o *Order
+	o, _ = New(0, "9856", "jpx", "margin_buy", "system", "normal", 0, "more", 100, 200, "2022-01-24", "afternoon", "not_ordered", false)
+	assert.True(t, o.CanBeOrdered())
+	o, _ = New(1, "1324", "jpx", "spot_buy", "", "open", 100, "", 0, 100, "2022-01-23", "morning", "completed", true)
+	assert.False(t, o.CanBeOrdered())
+}

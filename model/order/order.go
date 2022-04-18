@@ -96,3 +96,7 @@ func (o *Order) String() string {
 	}
 	return (string)(j)
 }
+
+func (o *Order) CanBeOrdered() bool {
+	return o.Status == "not_ordered"
+}
