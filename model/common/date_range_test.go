@@ -34,3 +34,26 @@ func TestDisabledDateRange(t *testing.T) {
 	assert.Error(t, err, "開始日付の方が後になっている")
 	assert.Nil(t, d)
 }
+
+func TestDateRangeToList(t *testing.T) {
+	var d *DateRange
+	var err error
+	d, err = NewDateRange("2000-01-01", "2000-01-08")
+	assert.NoError(t, err)
+	assert.Equal(t, 8, len(d.ToList()))
+	dates := d.ToList()
+	for i, date := range dates {
+		if i > 0 {
+			assert.True(t, date.After(dates[i-1]))
+			assert.False(t, date.IsEqual(dates[i-1]))
+		}
+	}
+	assert.Equal(t, "2000-01-01", dates[0].String())
+	assert.Equal(t, "2000-01-08", dates[7].String())
+	d, err = NewDateRange("2010-09-28", "2010-10-02")
+	assert.NoError(t, err)
+	assert.Equal(t, 5, len(d.ToList()))
+	d, err = NewDateRange("2020-01-02", "2020-01-02")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(d.ToList()))
+}

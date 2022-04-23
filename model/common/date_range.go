@@ -1,6 +1,9 @@
 package common
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 type DateRange struct {
 	begin Date
@@ -35,4 +38,17 @@ func (d *DateRange) String() string {
 
 func (d *DateRange) IsEqual(date *Date) bool {
 	return d.String() == date.String()
+}
+
+func (d *DateRange) ToList() []*Date {
+	var dates []*Date
+	var date *Date
+	date, _ = NewDate(d.begin.String())
+	for {
+		dates = append(dates, date)
+		if date.IsEqual(&d.end) {
+			return dates
+		}
+		date = NewDateAdded(date, time.Hour*24)
+	}
 }
