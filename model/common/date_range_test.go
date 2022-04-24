@@ -12,6 +12,8 @@ func TestEnabledDateRange(t *testing.T) {
 	var err error
 	d, err = NewDateRange("2000-01-01", "2000-01-02")
 	assert.Equal(t, "2000-01-01 ~ 2000-01-02", d.String(), "有効な日付範囲")
+	assert.Equal(t, "2000-01-01", d.Begin().String())
+	assert.Equal(t, "2000-01-02", d.End().String())
 	assert.NoError(t, err)
 	d, err = NewDateRange("2000-01-01", "2020-01-02")
 	assert.Equal(t, "2000-01-01 ~ 2020-01-02", d.String(), "有効な日付範囲")

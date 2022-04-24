@@ -32,6 +32,14 @@ func NewDateRangeByDates(begin *Date, end *Date) (*DateRange, error) {
 	}, nil
 }
 
+func (d *DateRange) Begin() *Date {
+	return &d.begin
+}
+
+func (d *DateRange) End() *Date {
+	return &d.end
+}
+
 func (d *DateRange) String() string {
 	return d.begin.String() + " ~ " + d.end.String()
 }
