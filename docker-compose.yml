@@ -9,5 +9,6 @@ services:
         - ./:/app
     working_dir: /app
     tty: true
+    stdin_open: true
     environment:
       - CGO_ENABLED=0
