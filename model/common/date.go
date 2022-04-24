@@ -15,6 +15,15 @@ func NewDate(v string) (*Date, error) {
 	return &d, nil
 }
 
+func NewDateByTime(v *time.Time) (*Date, error) {
+	t, err := time.Parse(time.RFC3339, v.Format("2006-01-02")+"T00:00:00+00:00")
+	if err != nil {
+		return nil, err
+	}
+	d := Date(t)
+	return &d, nil
+}
+
 func NewDateAdded(date *Date, plus time.Duration) *Date {
 	t := date.Time()
 	d := Date(t.Add(plus))
@@ -43,4 +52,8 @@ func (d *Date) Before(date *Date) bool {
 
 func (d *Date) After(date *Date) bool {
 	return d.Time().After(date.Time())
+}
+
+func (d *Date) WeekdayInt() int {
+	return int(d.Time().Weekday())
 }

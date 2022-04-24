@@ -60,3 +60,17 @@ func TestNewDateAdded(t *testing.T) {
 	assert.Equal(t, "2021-01-11", NewDateAdded(d1, -time.Hour*24*5).String())
 	assert.Equal(t, "2021-01-16", d1.String(), "元の日付は変更されない")
 }
+func TestNewDateByTime(t *testing.T) {
+	loc, _ := time.LoadLocation("Asia/Tokyo")
+	ti := time.Date(2022, 1, 2, 3, 4, 5, 6, loc)
+	d1, _ := NewDateByTime(&ti)
+	assert.Equal(t, "2022-01-02", d1.String())
+	assert.Equal(t, "2022-01-02T00:00:00", string(d1.Time().Format("2006-01-02T15:04:05")))
+}
+
+func TestGetWday(t *testing.T) {
+	d1, _ := NewDate("2000-01-01")
+	assert.Equal(t, 6, d1.WeekdayInt())
+	d2, _ := NewDate("2020-01-01")
+	assert.Equal(t, 3, d2.WeekdayInt())
+}
