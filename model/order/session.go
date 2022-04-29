@@ -21,8 +21,9 @@ func (p *Session) String() string {
 	return string(*p)
 }
 
-func getSessions() [2]string {
+func getSessions() [3]string {
 	return [...]string{
+		"anytime",
 		"morning",
 		"afternoon",
 	}

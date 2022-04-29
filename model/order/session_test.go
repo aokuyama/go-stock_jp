@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TesessEnabledSession(t *testing.T) {
+func TestEnabledSession(t *testing.T) {
 	var sess *Session
 	var err error
 	sess, err = NewSession("morning")
@@ -17,9 +17,12 @@ func TesessEnabledSession(t *testing.T) {
 	sess, err = NewSession("afternoon")
 	assert.NoError(t, err)
 	assert.Equal(t, "afternoon", sess.String(), "後場")
+	sess, err = NewSession("anytime")
+	assert.NoError(t, err)
+	assert.Equal(t, "anytime", sess.String(), "いつでも")
 }
 
-func TesessDisabledSession(t *testing.T) {
+func TestDisabledSession(t *testing.T) {
 	var sess *Session
 	var err error
 	_, err = NewSession("noon")
