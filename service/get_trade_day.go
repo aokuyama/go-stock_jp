@@ -8,18 +8,38 @@ import (
 	"github.com/aokuyama/go-stock_jp/model/common"
 )
 
-type GetTradeDayService struct {
+type GetTradeDay struct {
 	Repository calendar.CalendarRepository
+	Today      *common.Date
 }
 
-func NewGetTradeDayService(repository calendar.CalendarRepository) *GetTradeDayService {
-	return &GetTradeDayService{
-		Repository: repository,
+func NewGetTradeDay(repository calendar.CalendarRepository) (*GetTradeDay, error) {
+	now := time.Now()
+	today, err := common.NewDateByTime(&now)
+	if err != nil {
+		return nil, err
 	}
+	return &GetTradeDay{
+		Repository: repository,
+		Today:      today,
+	}, nil
 }
 
-func (s *GetTradeDayService) getCalendar(begin *common.Date) (*calendar.Calendar, error) {
+func (s *GetTradeDay) GetDateByTradeDayMode(mode string) (*common.Date, error) {
+	m, _ := calendar.NewTradeDayMode(mode)
+	if m == nil {
+		return common.NewDate(mode)
+	}
+	if m.IsTradeDayOnAfterToday() {
+		return s.GetTradeDayOnAfterToday(s.Today.String())
+	}
+	if m.IsTradeDayOnAfterTomorrow() {
+		return s.GetTradeDayOnAfterTomorrow(s.Today.String())
+	}
+	return nil, errors.New("fatal error")
+}
 
+func (s *GetTradeDay) getCalendar(begin *common.Date) (*calendar.Calendar, error) {
 	// 2週間分くらいあれば良い
 	end := common.NewDateAdded(begin, time.Hour*24*14)
 	r, err := common.NewDateRangeByDates(begin, end)
@@ -29,7 +49,7 @@ func (s *GetTradeDayService) getCalendar(begin *common.Date) (*calendar.Calendar
 	return s.Repository.LoadByDateRange(r)
 }
 
-func (s *GetTradeDayService) GetTradeDayOnAfterTomorrow(today string) (*common.Date, error) {
+func (s *GetTradeDay) GetTradeDayOnAfterTomorrow(today string) (*common.Date, error) {
 	d, err := common.NewDate(today)
 	if err != nil {
 		return nil, err
@@ -45,7 +65,7 @@ func (s *GetTradeDayService) GetTradeDayOnAfterTomorrow(today string) (*common.D
 	return r, nil
 }
 
-func (s *GetTradeDayService) GetTradeDayOnAfterToday(today string) (*common.Date, error) {
+func (s *GetTradeDay) GetTradeDayOnAfterToday(today string) (*common.Date, error) {
 	d, err := common.NewDate(today)
 	if err != nil {
 		return nil, err
