@@ -25,7 +25,7 @@ func getStatuses() [6]string {
 	return [...]string{
 		"not_ordered",
 		"stopped",
-		"ordeing",
+		"ordering",
 		"ordered",
 		"canceling",
 		"completed",
