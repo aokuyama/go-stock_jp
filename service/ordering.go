@@ -32,10 +32,10 @@ func (s *Ordering) Ordering(o *order.Order, p *event.Publisher) (*order.Order, e
 	if err != nil {
 		return nil, err
 	}
-	odrng := o.Ordering()
-	err = s.Repository.Save(odrng)
+	after := o.Ordering()
+	err = s.Repository.Update(after, o)
 	if err != nil {
 		return nil, err
 	}
-	return odrng, nil
+	return after, nil
 }

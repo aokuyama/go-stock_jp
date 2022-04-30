@@ -35,6 +35,20 @@ func (m *MockOrderRepository) EXPECT() *MockOrderRepositoryMockRecorder {
 	return m.recorder
 }
 
+// Insert mocks base method.
+func (m *MockOrderRepository) Insert(o *order.Order) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Insert", o)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Insert indicates an expected call of Insert.
+func (mr *MockOrderRepositoryMockRecorder) Insert(o interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockOrderRepository)(nil).Insert), o)
+}
+
 // LoadByDate mocks base method.
 func (m *MockOrderRepository) LoadByDate(date *common.Date) (*order.Collection, error) {
 	m.ctrl.T.Helper()
@@ -50,16 +64,16 @@ func (mr *MockOrderRepositoryMockRecorder) LoadByDate(date interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadByDate", reflect.TypeOf((*MockOrderRepository)(nil).LoadByDate), date)
 }
 
-// Save mocks base method.
-func (m *MockOrderRepository) Save(arg0 *order.Order) error {
+// Update mocks base method.
+func (m *MockOrderRepository) Update(after, before *order.Order) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save", arg0)
+	ret := m.ctrl.Call(m, "Update", after, before)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Save indicates an expected call of Save.
-func (mr *MockOrderRepositoryMockRecorder) Save(arg0 interface{}) *gomock.Call {
+// Update indicates an expected call of Update.
+func (mr *MockOrderRepositoryMockRecorder) Update(after, before interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockOrderRepository)(nil).Save), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockOrderRepository)(nil).Update), after, before)
 }

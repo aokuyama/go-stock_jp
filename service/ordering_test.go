@@ -32,8 +32,8 @@ func TestOrderingOrders(t *testing.T) {
 
 	sub.EXPECT().Type().Return("")
 	sub.EXPECT().Type().Return("")
-	s.Repository.(*mock.MockOrderRepository).EXPECT().Save(o1.Ordering()).Return(nil)
-	s.Repository.(*mock.MockOrderRepository).EXPECT().Save(o2.Ordering()).Return(nil)
+	s.Repository.(*mock.MockOrderRepository).EXPECT().Update(o1.Ordering(), o1).Return(nil)
+	s.Repository.(*mock.MockOrderRepository).EXPECT().Update(o2.Ordering(), o2).Return(nil)
 
 	odred, err := s.OrderingOrders(odrs, p)
 	assert.NoError(t, err)
@@ -50,7 +50,7 @@ func TestOrdering(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		sub.EXPECT().Type().Return("OrderingEvent")
 		sub.EXPECT().Subscribe(gomock.Any()).Return(nil)
-		s.Repository.(*mock.MockOrderRepository).EXPECT().Save(o.Ordering()).Return(nil)
+		s.Repository.(*mock.MockOrderRepository).EXPECT().Update(o.Ordering(), o).Return(nil)
 		oo, err := s.Ordering(o, p)
 		assert.NoError(t, err)
 		assert.Equal(t, "ordering", oo.Status.String())
@@ -67,7 +67,7 @@ func TestOrdering(t *testing.T) {
 	t.Run("save error", func(t *testing.T) {
 		sub.EXPECT().Type().Return("OrderingEvent")
 		sub.EXPECT().Subscribe(gomock.Any()).Return(nil)
-		s.Repository.(*mock.MockOrderRepository).EXPECT().Save(o.Ordering()).Return(errors.New("err"))
+		s.Repository.(*mock.MockOrderRepository).EXPECT().Update(o.Ordering(), o).Return(errors.New("err"))
 		oo, err := s.Ordering(o, p)
 		assert.Error(t, err)
 		assert.Nil(t, oo)
