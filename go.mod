@@ -3,7 +3,7 @@ module github.com/aokuyama/go-stock_jp
 go 1.17
 
 require (
-	github.com/aokuyama/go-generic_subdomains v0.0.8
+	github.com/aokuyama/go-generic_subdomains v0.0.9
 	github.com/golang/mock v1.6.0
 	github.com/stretchr/testify v1.7.0
 )

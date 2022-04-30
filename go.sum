@@ -1,5 +1,5 @@
-github.com/aokuyama/go-generic_subdomains v0.0.8 h1:rFWTLO/IBNZmF6V6CWquOsdWwPeSzuMPbHP94PTtwQA=
-github.com/aokuyama/go-generic_subdomains v0.0.8/go.mod h1:nZq4L6yX51/xEZIoEeqiD1oYogzZVjXchNpyfMcUM+E=
+github.com/aokuyama/go-generic_subdomains v0.0.9 h1:F3k8L0RNEeQnv3nGriKrhvoM0fRjNOIUdGe4CDEH/EI=
+github.com/aokuyama/go-generic_subdomains v0.0.9/go.mod h1:nZq4L6yX51/xEZIoEeqiD1oYogzZVjXchNpyfMcUM+E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
