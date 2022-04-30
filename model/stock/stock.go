@@ -7,8 +7,8 @@ import (
 )
 
 type Stock struct {
-	SequrityCode SecurityCode
-	Market       Market
+	SequrityCode SecurityCode `json:"security_code"`
+	Market       Market       `json:"market"`
 }
 
 func New(security_code string, market string) (*Stock, error) {

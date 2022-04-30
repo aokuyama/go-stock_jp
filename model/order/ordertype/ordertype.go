@@ -9,8 +9,8 @@ import (
 )
 
 type Ordertype struct {
-	Trade  TradeType
-	Margin *MarginType
+	Trade  TradeType   `json:"trade"`
+	Margin *MarginType `json:"margin"`
 }
 
 func New(trade string, margin string) (*Ordertype, error) {

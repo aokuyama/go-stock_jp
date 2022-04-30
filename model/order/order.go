@@ -11,19 +11,17 @@ import (
 )
 
 type Order struct {
-	ID        *OrderID
-	Stock     stock.Stock
-	Type      ordertype.Ordertype
-	Condition Condition
-	Bid       *stock.StockPrice
-	Trigger   trigger.Trigger
-	Quantity  Quantity
-
-	Date    common.Date
-	Session Session
-
-	Status   Status
-	IsCancel bool
+	ID        *OrderID            `json:"id"`
+	Stock     stock.Stock         `json:"stock"`
+	Type      ordertype.Ordertype `json:"type"`
+	Condition Condition           `json:"condition"`
+	Bid       *stock.StockPrice   `json:"bid"`
+	Trigger   trigger.Trigger     `json:"trigger"`
+	Quantity  Quantity            `json:"quantity"`
+	Date      common.Date         `json:"date"`
+	Session   Session             `json:"session"`
+	Status    Status              `json:"status"`
+	IsCancel  bool                `json:"is_cancel"`
 }
 
 func New(

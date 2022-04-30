@@ -9,8 +9,8 @@ import (
 )
 
 type Trigger struct {
-	Type  *TriggerType
-	Price *stock.StockPrice
+	Type  *TriggerType      `json:"type"`
+	Price *stock.StockPrice `json:"price"`
 }
 
 func New(ttype string, price float64) (*Trigger, error) {

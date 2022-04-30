@@ -12,10 +12,10 @@ func TestNewPosition(t *testing.T) {
 	var s *Stock
 	var err error
 	s, err = New("3662", "jpx")
-	assert.Equal(t, `{"SequrityCode":"3662","Market":"jpx"}`, string(s.String()), "有効な株")
+	assert.Equal(t, `{"security_code":"3662","market":"jpx"}`, string(s.String()), "有効な株")
 	assert.NoError(t, err)
 	s, err = New("7974", "ose")
-	assert.Equal(t, `{"SequrityCode":"7974","Market":"ose"}`, string(s.String()), "有効な株")
+	assert.Equal(t, `{"security_code":"7974","market":"ose"}`, string(s.String()), "有効な株")
 	assert.NoError(t, err)
 }
 func TestErrorNewPosition(t *testing.T) {

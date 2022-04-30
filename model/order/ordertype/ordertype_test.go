@@ -12,10 +12,10 @@ func TestOrdertype(t *testing.T) {
 	var ot *Ordertype
 	var err error
 	ot, err = New("margin_buy", "general")
-	assert.Equal(t, `{"Trade":"margin_buy","Margin":"general"}`, string(ot.String()), "有効なタイプ")
+	assert.Equal(t, `{"trade":"margin_buy","margin":"general"}`, string(ot.String()), "有効なタイプ")
 	assert.NoError(t, err)
 	ot, err = New("spot_buy", "")
-	assert.Equal(t, `{"Trade":"spot_buy","Margin":null}`, string(ot.String()), "有効なタイプ")
+	assert.Equal(t, `{"trade":"spot_buy","margin":null}`, string(ot.String()), "有効なタイプ")
 	assert.NoError(t, err)
 }
 

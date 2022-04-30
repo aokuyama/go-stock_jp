@@ -12,13 +12,13 @@ func TestEnableTrigger(t *testing.T) {
 	var tt *Trigger
 	var err error
 	tt, err = New("more", 1.1)
-	assert.Equal(t, `{"Type":"more","Price":1.1}`, string(tt.String()), "有効な逆指値")
+	assert.Equal(t, `{"type":"more","price":1.1}`, string(tt.String()), "有効な逆指値")
 	assert.NoError(t, err)
 	tt, err = New("less", 10000)
-	assert.Equal(t, `{"Type":"less","Price":10000}`, string(tt.String()), "有効な逆指値")
+	assert.Equal(t, `{"type":"less","price":10000}`, string(tt.String()), "有効な逆指値")
 	assert.NoError(t, err)
 	tt, err = New("", 0)
-	assert.Equal(t, `{"Type":null,"Price":null}`, string(tt.String()), "逆指値なし")
+	assert.Equal(t, `{"type":null,"price":null}`, string(tt.String()), "逆指値なし")
 	assert.NoError(t, err)
 }
 
