@@ -98,3 +98,24 @@ func (o *Order) String() string {
 func (o *Order) CanBeOrdered() bool {
 	return o.Status == "not_ordered"
 }
+
+func (o *Order) Ordering() *Order {
+	s, err := NewStatus("ordering")
+	if err != nil {
+		panic(err)
+	}
+	o2 := Order{
+		o.ID,
+		o.Stock,
+		o.Type,
+		o.Condition,
+		o.Bid,
+		o.Trigger,
+		o.Quantity,
+		o.Date,
+		o.Session,
+		*s,
+		o.IsCancel,
+	}
+	return &o2
+}

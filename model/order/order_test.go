@@ -11,10 +11,10 @@ func TestEnableOrder(t *testing.T) {
 	var o *Order
 	var err error
 	o, err = New(0, "9856", "jpx", "margin_buy", "system", "normal", 0, "more", 100, 200, "2022-01-24", "afternoon", "completed", false)
-	assert.Equal(t, `{"id":null,"stock":{"security_code":"9856","market":"jpx"},"type":{"trade":"margin_buy","margin":"system"},"condition":"normal","bid":null,"trigger":{"type":"more","price":100},"quantity":200,"date":"2022-01-24","session":"afternoon","status":"completed","is_cancel":false}`, string(o.String()), "有効なオーダー")
+	assert.Equal(t, `{"id":null,"stock":{"security_code":"9856","market":"jpx"},"type":{"trade":"margin_buy","margin":"system"},"condition":"normal","bid":null,"trigger":{"type":"more","price":100},"quantity":200,"date":"2022-01-24","session":"afternoon","status":"completed","is_cancel":false}`, o.String(), "有効なオーダー")
 	assert.NoError(t, err)
 	o, err = New(1, "1324", "jpx", "spot_buy", "", "open", 100, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
-	assert.Equal(t, `{"id":1,"stock":{"security_code":"1324","market":"jpx"},"type":{"trade":"spot_buy","margin":null},"condition":"open","bid":100,"trigger":{"type":null,"price":null},"quantity":100,"date":"2022-01-23","session":"morning","status":"not_ordered","is_cancel":true}`, string(o.String()), "有効なオーダー")
+	assert.Equal(t, `{"id":1,"stock":{"security_code":"1324","market":"jpx"},"type":{"trade":"spot_buy","margin":null},"condition":"open","bid":100,"trigger":{"type":null,"price":null},"quantity":100,"date":"2022-01-23","session":"morning","status":"not_ordered","is_cancel":true}`, o.String(), "有効なオーダー")
 	assert.NoError(t, err)
 }
 
@@ -64,4 +64,12 @@ func TestCanBeOrdered(t *testing.T) {
 	assert.True(t, o.CanBeOrdered())
 	o, _ = New(1, "1324", "jpx", "spot_buy", "", "open", 100, "", 0, 100, "2022-01-23", "morning", "completed", true)
 	assert.False(t, o.CanBeOrdered())
+}
+
+func TestOrderStatusChange(t *testing.T) {
+	o, _ := New(1, "1324", "jpx", "spot_buy", "", "open", 100, "", 0, 100, "2022-01-23", "morning", "not_ordered", true)
+	o2 := o.Ordering()
+	assert.Equal(t, `{"id":1,"stock":{"security_code":"1324","market":"jpx"},"type":{"trade":"spot_buy","margin":null},"condition":"open","bid":100,"trigger":{"type":null,"price":null},"quantity":100,"date":"2022-01-23","session":"morning","status":"ordering","is_cancel":true}`, o2.String(), "copy")
+	assert.Equal(t, "not_ordered", o.Status.String(), "immutable")
+	assert.Equal(t, "ordering", o2.Status.String())
 }
