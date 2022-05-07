@@ -8,7 +8,7 @@ import (
 )
 
 type Calendar struct {
-	Dates []*Date
+	Dates []*Date `json:"dates"`
 }
 
 func New(dates *[]*Date) (*Calendar, error) {

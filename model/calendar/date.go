@@ -3,8 +3,8 @@ package calendar
 import "github.com/aokuyama/go-stock_jp/model/common"
 
 type Date struct {
-	Date      common.Date
-	IsHoliday bool
+	Date      common.Date `json:"date"`
+	IsHoliday bool        `json:"is_holiday"`
 }
 
 func NewDate(date string, isHoliday bool) (*Date, error) {
