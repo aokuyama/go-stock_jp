@@ -1,6 +1,7 @@
 package common
 
 import (
+	"encoding/json"
 	"time"
 )
 
@@ -32,6 +33,19 @@ func NewDateAdded(date *Date, plus time.Duration) *Date {
 
 func (d *Date) String() string {
 	return time.Time(*d).Format("2006-01-02")
+}
+
+func (d *Date) UnmarshalJSON(b []byte) error {
+	var ds string
+	if err := json.Unmarshal(b, &ds); err != nil {
+		return err
+	}
+	n, err := NewDate(ds)
+	if err != nil {
+		return err
+	}
+	*d = *n
+	return nil
 }
 
 func (d *Date) Time() time.Time {

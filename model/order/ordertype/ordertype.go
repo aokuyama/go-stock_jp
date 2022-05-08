@@ -57,3 +57,20 @@ func (t *Ordertype) String() string {
 	}
 	return (string)(j)
 }
+
+func (t *Ordertype) UnmarshalJSON(b []byte) error {
+	type O struct {
+		Trade  string `json:"trade"`
+		Margin string `json:"margin"`
+	}
+	ot := O{}
+	if err := json.Unmarshal(b, &ot); err != nil {
+		return err
+	}
+	n, err := New(ot.Trade, ot.Margin)
+	if err != nil {
+		return err
+	}
+	*t = *n
+	return nil
+}

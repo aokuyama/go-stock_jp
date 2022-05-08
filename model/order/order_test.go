@@ -1,6 +1,7 @@
 package order_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	. "github.com/aokuyama/go-stock_jp/model/order"
@@ -72,4 +73,14 @@ func TestOrderStatusChange(t *testing.T) {
 	assert.Equal(t, `{"id":1,"stock":{"security_code":"1324","market":"jpx"},"type":{"trade":"spot_buy","margin":null},"condition":"open","bid":100,"trigger":{"type":null,"price":null},"quantity":100,"date":"2022-01-23","session":"morning","status":"ordering","is_cancel":true}`, o2.String(), "copy")
 	assert.Equal(t, "not_ordered", o.Status.String(), "immutable")
 	assert.Equal(t, "ordering", o2.Status.String())
+}
+
+func TestUnmarshal(t *testing.T) {
+	var o Collection
+	equal := `[{"id":10,"stock":{"security_code":"1300","market":"jpx"},"type":{"trade":"margin_buy","margin":"system"},"condition":"normal","bid":null,"trigger":{"type":"more","price":298},"quantity":500,"date":"2022-05-06","session":"anytime","status":"completed","is_cancel":false},{"id":12,"stock":{"security_code":"1301","market":"jpx"},"type":{"trade":"margin_buy","margin":"system"},"condition":"normal","bid":null,"trigger":{"type":"more","price":1008},"quantity":100,"date":"2022-05-06","session":"anytime","status":"completed","is_cancel":false}]`
+	err := json.Unmarshal([]byte(equal), &o)
+	assert.NoError(t, err)
+	r, err := json.Marshal(o)
+	assert.NoError(t, err)
+	assert.Equal(t, equal, string(r))
 }
