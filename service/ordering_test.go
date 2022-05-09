@@ -37,8 +37,8 @@ func TestOrderingOrders(t *testing.T) {
 
 	odred, err := s.OrderingOrders(odrs, p)
 	assert.NoError(t, err)
-	assert.Equal(t, "ordering", (*odred)[0].Status.String())
-	assert.Equal(t, "ordering", (*odred)[1].Status.String())
+	assert.Equal(t, "ordering", (*odred)[0].Status())
+	assert.Equal(t, "ordering", (*odred)[1].Status())
 }
 func TestOrdering(t *testing.T) {
 	s := getNewTestOrdering(t)
@@ -53,7 +53,7 @@ func TestOrdering(t *testing.T) {
 		s.Repository.(*mock.MockOrderRepository).EXPECT().Update(o.Ordering(), o).Return(nil)
 		oo, err := s.Ordering(o, p)
 		assert.NoError(t, err)
-		assert.Equal(t, "ordering", oo.Status.String())
+		assert.Equal(t, "ordering", oo.Status())
 	})
 
 	t.Run("publish error", func(t *testing.T) {

@@ -9,6 +9,11 @@ import (
 )
 
 type Trigger struct {
+	trigger_type *TriggerType
+	price        *stock.StockPrice
+}
+
+type triggerJson struct {
 	Type  *TriggerType      `json:"type"`
 	Price *stock.StockPrice `json:"price"`
 }
@@ -37,13 +42,13 @@ func New(ttype string, price float64) (*Trigger, error) {
 }
 
 func (t *Trigger) Error() string {
-	if t.Type != nil {
-		if t.Price == nil {
+	if t.trigger_type != nil {
+		if t.price == nil {
 			return "undefined price"
 		}
 	}
-	if t.Price != nil {
-		if t.Type == nil {
+	if t.price != nil {
+		if t.trigger_type == nil {
 			return "undefined type"
 		}
 	}
@@ -56,4 +61,23 @@ func (t *Trigger) String() string {
 		panic(err)
 	}
 	return (string)(j)
+}
+
+func (t *Trigger) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&triggerJson{
+		Type:  t.trigger_type,
+		Price: t.price,
+	})
+}
+
+func (t *Trigger) UnmarshalJSON(b []byte) error {
+	j := triggerJson{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return err
+	}
+	*t = Trigger{
+		trigger_type: j.Type,
+		price:        j.Price,
+	}
+	return nil
 }

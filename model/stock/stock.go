@@ -7,6 +7,11 @@ import (
 )
 
 type Stock struct {
+	sequrityCode SecurityCode
+	market       Market
+}
+
+type stockJson struct {
 	SequrityCode SecurityCode `json:"security_code"`
 	Market       Market       `json:"market"`
 }
@@ -32,4 +37,23 @@ func (s *Stock) String() string {
 		panic(err)
 	}
 	return (string)(j)
+}
+
+func (s *Stock) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&stockJson{
+		SequrityCode: s.sequrityCode,
+		Market:       s.market,
+	})
+}
+
+func (s *Stock) UnmarshalJSON(b []byte) error {
+	j := stockJson{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return err
+	}
+	*s = Stock{
+		sequrityCode: j.SequrityCode,
+		market:       j.Market,
+	}
+	return nil
 }

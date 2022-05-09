@@ -11,6 +11,19 @@ import (
 )
 
 type Order struct {
+	id         *OrderID
+	stock      stock.Stock
+	order_type order_type.OrderType
+	condition  Condition
+	bid        *stock.StockPrice
+	trigger    trigger.Trigger
+	quantity   Quantity
+	date       common.Date
+	session    Session
+	status     Status
+	isCancel   bool
+}
+type orderJson struct {
 	ID        *OrderID             `json:"id"`
 	Stock     stock.Stock          `json:"stock"`
 	Type      order_type.OrderType `json:"type"`
@@ -95,8 +108,45 @@ func (o *Order) String() string {
 	return (string)(j)
 }
 
+func (o *Order) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&orderJson{
+		ID:        o.id,
+		Stock:     o.stock,
+		Type:      o.order_type,
+		Condition: o.condition,
+		Bid:       o.bid,
+		Trigger:   o.trigger,
+		Quantity:  o.quantity,
+		Date:      o.date,
+		Session:   o.session,
+		Status:    o.status,
+		IsCancel:  o.isCancel,
+	})
+}
+
+func (o *Order) UnmarshalJSON(b []byte) error {
+	j := orderJson{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return err
+	}
+	*o = Order{
+		id:         j.ID,
+		stock:      j.Stock,
+		order_type: j.Type,
+		condition:  j.Condition,
+		bid:        j.Bid,
+		trigger:    j.Trigger,
+		quantity:   j.Quantity,
+		date:       j.Date,
+		session:    j.Session,
+		status:     j.Status,
+		isCancel:   j.IsCancel,
+	}
+	return nil
+}
+
 func (o *Order) CanBeOrdered() bool {
-	return o.Status == "not_ordered"
+	return o.status == "not_ordered"
 }
 
 func (o *Order) Ordering() *Order {
@@ -105,17 +155,21 @@ func (o *Order) Ordering() *Order {
 		panic(err)
 	}
 	o2 := Order{
-		o.ID,
-		o.Stock,
-		o.Type,
-		o.Condition,
-		o.Bid,
-		o.Trigger,
-		o.Quantity,
-		o.Date,
-		o.Session,
+		o.id,
+		o.stock,
+		o.order_type,
+		o.condition,
+		o.bid,
+		o.trigger,
+		o.quantity,
+		o.date,
+		o.session,
 		*s,
-		o.IsCancel,
+		o.isCancel,
 	}
 	return &o2
+}
+
+func (o *Order) Status() string {
+	return o.status.String()
 }
