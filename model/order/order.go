@@ -5,23 +5,23 @@ import (
 
 	"github.com/aokuyama/go-generic_subdomains/errs"
 	"github.com/aokuyama/go-stock_jp/model/common"
-	"github.com/aokuyama/go-stock_jp/model/order/ordertype"
+	"github.com/aokuyama/go-stock_jp/model/order/order_type"
 	"github.com/aokuyama/go-stock_jp/model/order/trigger"
 	"github.com/aokuyama/go-stock_jp/model/stock"
 )
 
 type Order struct {
-	ID        *OrderID            `json:"id"`
-	Stock     stock.Stock         `json:"stock"`
-	Type      ordertype.Ordertype `json:"type"`
-	Condition Condition           `json:"condition"`
-	Bid       *stock.StockPrice   `json:"bid"`
-	Trigger   trigger.Trigger     `json:"trigger"`
-	Quantity  Quantity            `json:"quantity"`
-	Date      common.Date         `json:"date"`
-	Session   Session             `json:"session"`
-	Status    Status              `json:"status"`
-	IsCancel  bool                `json:"is_cancel"`
+	ID        *OrderID             `json:"id"`
+	Stock     stock.Stock          `json:"stock"`
+	Type      order_type.OrderType `json:"type"`
+	Condition Condition            `json:"condition"`
+	Bid       *stock.StockPrice    `json:"bid"`
+	Trigger   trigger.Trigger      `json:"trigger"`
+	Quantity  Quantity             `json:"quantity"`
+	Date      common.Date          `json:"date"`
+	Session   Session              `json:"session"`
+	Status    Status               `json:"status"`
+	IsCancel  bool                 `json:"is_cancel"`
 }
 
 func New(
@@ -50,7 +50,7 @@ func New(
 	}
 	s, err := stock.New(security_code, market)
 	errs.Append(err)
-	ot, err := ordertype.New(trade_type, margin_type)
+	ot, err := order_type.New(trade_type, margin_type)
 	errs.Append(err)
 	c, err := NewCondition(condition)
 	errs.Append(err)

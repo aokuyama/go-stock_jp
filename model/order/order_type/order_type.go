@@ -1,4 +1,4 @@
-package ordertype
+package order_type
 
 import (
 	"encoding/json"
@@ -8,12 +8,12 @@ import (
 	"errors"
 )
 
-type Ordertype struct {
+type OrderType struct {
 	Trade  TradeType   `json:"trade"`
 	Margin *MarginType `json:"margin"`
 }
 
-func New(trade string, margin string) (*Ordertype, error) {
+func New(trade string, margin string) (*OrderType, error) {
 	errs := errs.New()
 	t, err := NewTradeType(trade)
 	errs.Append(err)
@@ -27,7 +27,7 @@ func New(trade string, margin string) (*Ordertype, error) {
 	if errs.Err() != nil {
 		return nil, errs.Err()
 	}
-	ot := Ordertype{
+	ot := OrderType{
 		t,
 		m,
 	}
@@ -37,7 +37,7 @@ func New(trade string, margin string) (*Ordertype, error) {
 	return &ot, nil
 }
 
-func (t *Ordertype) Error() string {
+func (t *OrderType) Error() string {
 	if t.Trade.IsSpot() {
 		if t.Margin != nil {
 			return "invalid order type:" + t.String()
@@ -50,7 +50,7 @@ func (t *Ordertype) Error() string {
 	return ""
 }
 
-func (t *Ordertype) String() string {
+func (t *OrderType) String() string {
 	j, err := json.Marshal(t)
 	if err != nil {
 		panic(err)
@@ -58,7 +58,7 @@ func (t *Ordertype) String() string {
 	return (string)(j)
 }
 
-func (t *Ordertype) UnmarshalJSON(b []byte) error {
+func (t *OrderType) UnmarshalJSON(b []byte) error {
 	type O struct {
 		Trade  string `json:"trade"`
 		Margin string `json:"margin"`

@@ -5,20 +5,20 @@ import (
 	"errors"
 
 	"github.com/aokuyama/go-generic_subdomains/errs"
-	"github.com/aokuyama/go-stock_jp/model/order/ordertype"
+	"github.com/aokuyama/go-stock_jp/model/order/order_type"
 	"github.com/aokuyama/go-stock_jp/model/stock"
 	"github.com/aokuyama/go-stock_jp/model/trade"
 )
 
 type Position struct {
-	PositionType ordertype.PositionType `json:"position_type"`
-	SecurityCode stock.SecurityCode     `json:"security_code"`
-	Quantity     Quantity               `json:"quantity"`
+	PositionType order_type.PositionType `json:"position_type"`
+	SecurityCode stock.SecurityCode      `json:"security_code"`
+	Quantity     Quantity                `json:"quantity"`
 }
 
 func New(position_type string, security_code string, quantity int) (*Position, error) {
 	errs := errs.New()
-	p, err := ordertype.NewPositionType(position_type)
+	p, err := order_type.NewPositionType(position_type)
 	errs.Append(err)
 	s, err := stock.NewSecurityCode(security_code)
 	errs.Append(err)
@@ -104,7 +104,7 @@ func (p *Position) Target() *stock.SecurityCode {
 	return &p.SecurityCode
 }
 
-func (p *Position) Type() *ordertype.PositionType {
+func (p *Position) Type() *order_type.PositionType {
 	return &p.PositionType
 }
 

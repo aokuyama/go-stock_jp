@@ -1,15 +1,15 @@
-package ordertype_test
+package order_type_test
 
 import (
 	"testing"
 
-	. "github.com/aokuyama/go-stock_jp/model/order/ordertype"
+	. "github.com/aokuyama/go-stock_jp/model/order/order_type"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestOrdertype(t *testing.T) {
-	var ot *Ordertype
+func TestOrderType(t *testing.T) {
+	var ot *OrderType
 	var err error
 	ot, err = New("margin_buy", "general")
 	assert.Equal(t, `{"trade":"margin_buy","margin":"general"}`, string(ot.String()), "有効なタイプ")
@@ -19,8 +19,8 @@ func TestOrdertype(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestErrorOrdertype(t *testing.T) {
-	var ot *Ordertype
+func TestErrorOrderType(t *testing.T) {
+	var ot *OrderType
 	var err error
 	ot, err = New("margin_buy", "a")
 	assert.Nil(t, ot)

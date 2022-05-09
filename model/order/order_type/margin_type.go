@@ -1,4 +1,4 @@
-package ordertype
+package order_type
 
 import (
 	"errors"

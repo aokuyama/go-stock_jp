@@ -4,18 +4,18 @@ import (
 	"encoding/json"
 
 	"github.com/aokuyama/go-stock_jp/model/order"
-	"github.com/aokuyama/go-stock_jp/model/order/ordertype"
+	"github.com/aokuyama/go-stock_jp/model/order/order_type"
 	"github.com/aokuyama/go-stock_jp/model/stock"
 )
 
 type PositionTrade struct {
-	PositionType ordertype.PositionType
+	PositionType order_type.PositionType
 	SecurityCode stock.SecurityCode
 	Quantity     order.Quantity
 }
 
 func NewPositionTrade(trade_type string, security_code string, quantity int) (*PositionTrade, error) {
-	t, err := ordertype.NewPositionType(trade_type)
+	t, err := order_type.NewPositionType(trade_type)
 	if err != nil {
 		return nil, err
 	}
@@ -46,6 +46,6 @@ func (p *PositionTrade) Target() *stock.SecurityCode {
 	return &p.SecurityCode
 }
 
-func (p *PositionTrade) Type() *ordertype.PositionType {
+func (p *PositionTrade) Type() *order_type.PositionType {
 	return &p.PositionType
 }
