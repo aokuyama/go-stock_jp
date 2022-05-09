@@ -19,12 +19,19 @@ func TestDateSorted(t *testing.T) {
 	dates = append(dates, d1, d2, d3, d4, d5)
 	c, err := New(&dates)
 	assert.NoError(t, err)
-	assert.Equal(t, 5, len(c.Dates))
-	assert.Equal(t, "2019-12-15", c.Dates[0].Date.String())
-	assert.Equal(t, "2020-10-08", c.Dates[1].Date.String())
-	assert.Equal(t, "2020-10-09", c.Dates[2].Date.String())
-	assert.Equal(t, "2020-10-10", c.Dates[3].Date.String())
-	assert.Equal(t, "2021-04-01", c.Dates[4].Date.String())
+	assert.Equal(t, 5, c.Len())
+	var d Date
+	d = c.Nth(0)
+	assert.Equal(t, `{"date":"2019-12-15","is_holiday":true}`, d.String())
+	d = c.Nth(1)
+	assert.Equal(t, `{"date":"2020-10-08","is_holiday":true}`, d.String())
+	d = c.Nth(2)
+	assert.Equal(t, `{"date":"2020-10-09","is_holiday":false}`, d.String())
+	d = c.Nth(3)
+	assert.Equal(t, `{"date":"2020-10-10","is_holiday":false}`, d.String())
+	d = c.Nth(4)
+	assert.Equal(t, `{"date":"2021-04-01","is_holiday":true}`, d.String())
+	assert.Equal(t, `{"dates":[{"date":"2019-12-15","is_holiday":true},{"date":"2020-10-08","is_holiday":true},{"date":"2020-10-09","is_holiday":false},{"date":"2020-10-10","is_holiday":false},{"date":"2021-04-01","is_holiday":true}]}`, c.String())
 }
 
 func TestErrorDuplicateDates(t *testing.T) {

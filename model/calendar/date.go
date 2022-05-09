@@ -1,10 +1,14 @@
 package calendar
 
-import "github.com/aokuyama/go-stock_jp/model/common"
+import (
+	"encoding/json"
+
+	"github.com/aokuyama/go-stock_jp/model/common"
+)
 
 type Date struct {
-	Date      common.Date `json:"date"`
-	IsHoliday bool        `json:"is_holiday"`
+	date      common.Date
+	isHoliday bool
 }
 
 func NewDate(date string, isHoliday bool) (*Date, error) {
@@ -13,19 +17,41 @@ func NewDate(date string, isHoliday bool) (*Date, error) {
 		return nil, err
 	}
 	return &Date{
-		Date:      *d,
-		IsHoliday: isHoliday,
+		date:      *d,
+		isHoliday: isHoliday,
 	}, nil
 }
 
 func (d *Date) IsEqual(date *Date) bool {
-	return (d.IsHoliday == date.IsHoliday) && d.IsEqualDate(date)
+	return (d.isHoliday == date.isHoliday) && d.IsEqualDate(date)
 }
 
 func (d *Date) IsEqualDate(date *Date) bool {
-	return d.Date.IsEqual(&date.Date)
+	return d.date.IsEqual(&date.date)
+}
+
+func (d *Date) IsHoliday() bool {
+	return d.isHoliday
 }
 
 func (d *Date) IsTradeDay() bool {
-	return !d.IsHoliday
+	return !d.IsHoliday()
+}
+
+func (d *Date) String() string {
+	j, err := json.Marshal(d)
+	if err != nil {
+		panic(err)
+	}
+	return string(j)
+}
+
+func (d *Date) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		Date      common.Date `json:"date"`
+		IsHoliday bool        `json:"is_holiday"`
+	}{
+		Date:      d.date,
+		IsHoliday: d.isHoliday,
+	})
 }

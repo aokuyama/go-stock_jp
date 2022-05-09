@@ -1,6 +1,7 @@
 package calendar
 
 import (
+	"encoding/json"
 	"errors"
 	"sort"
 
@@ -8,7 +9,7 @@ import (
 )
 
 type Calendar struct {
-	Dates []*Date `json:"dates"`
+	dates []*Date `json:"dates"`
 }
 
 func New(dates *[]*Date) (*Calendar, error) {
@@ -27,7 +28,7 @@ func (d ByDate) Len() int {
 	return len(d)
 }
 func (d ByDate) Less(i, j int) bool {
-	return d[i].Date.String() < d[j].Date.String()
+	return d[i].date.String() < d[j].date.String()
 }
 func (a ByDate) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
@@ -38,22 +39,46 @@ func (c *Calendar) setDates(dates *[]*Date) error {
 		return nil
 	}
 	for _, d := range *dates {
-		for _, sd := range c.Dates {
+		for _, sd := range c.dates {
 			if d.IsEqualDate(sd) {
-				return errors.New("duplicate date:" + d.Date.String())
+				return errors.New("duplicate date:" + d.date.String())
 			}
 		}
-		c.Dates = append(c.Dates, d)
+		c.dates = append(c.dates, d)
 	}
-	sort.Sort(ByDate(c.Dates))
+	sort.Sort(ByDate(c.dates))
 	return nil
+}
+
+func (c *Calendar) String() string {
+	j, err := json.Marshal(c)
+	if err != nil {
+		panic(err)
+	}
+	return string(j)
+}
+
+func (c *Calendar) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		Dates []*Date `json:"dates"`
+	}{
+		Dates: c.dates,
+	})
+}
+
+func (c *Calendar) Len() int {
+	return len(c.dates)
+}
+
+func (c *Calendar) Nth(i int) Date {
+	return *c.dates[i]
 }
 
 func (c *Calendar) TradeDays() *[]*common.Date {
 	var dates []*common.Date
-	for _, d := range c.Dates {
+	for _, d := range c.dates {
 		if d.IsTradeDay() {
-			dates = append(dates, &d.Date)
+			dates = append(dates, &d.date)
 		}
 	}
 	return &dates

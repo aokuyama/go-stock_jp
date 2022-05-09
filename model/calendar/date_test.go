@@ -13,12 +13,12 @@ func TestEnabledDate(t *testing.T) {
 	var err error
 	d, err = NewDate("2020-10-01", true)
 	assert.NoError(t, err)
-	assert.Equal(t, "2020-10-01", d.Date.String(), "有効な日付")
-	assert.True(t, d.IsHoliday)
+	assert.Equal(t, `{"date":"2020-10-01","is_holiday":true}`, d.String(), "有効な日付")
+	assert.True(t, d.IsHoliday())
 	d, err = NewDate("2020-01-07", false)
 	assert.NoError(t, err)
-	assert.Equal(t, "2020-01-07", d.Date.String(), "有効な日付")
-	assert.False(t, d.IsHoliday)
+	assert.Equal(t, `{"date":"2020-01-07","is_holiday":false}`, d.String(), "有効な日付")
+	assert.False(t, d.IsHoliday())
 }
 
 func TestDisabledQuantity(t *testing.T) {
