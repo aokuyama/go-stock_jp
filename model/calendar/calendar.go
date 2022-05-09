@@ -9,7 +9,11 @@ import (
 )
 
 type Calendar struct {
-	dates []*Date `json:"dates"`
+	dates []*Date
+}
+
+type calendarJson struct {
+	Dates []*Date `json:"dates"`
 }
 
 func New(dates *[]*Date) (*Calendar, error) {
@@ -59,11 +63,20 @@ func (c *Calendar) String() string {
 }
 
 func (c *Calendar) MarshalJSON() ([]byte, error) {
-	return json.Marshal(&struct {
-		Dates []*Date `json:"dates"`
-	}{
+	return json.Marshal(&calendarJson{
 		Dates: c.dates,
 	})
+}
+
+func (c *Calendar) UnmarshalJSON(b []byte) error {
+	j := calendarJson{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return err
+	}
+	*c = Calendar{
+		dates: j.Dates,
+	}
+	return nil
 }
 
 func (c *Calendar) Len() int {

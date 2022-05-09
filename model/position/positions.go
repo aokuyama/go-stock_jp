@@ -67,7 +67,7 @@ func (p *Positions) Uncompletes() *Positions {
 func (p *Positions) SumQuantity() int {
 	sum := 0
 	for _, pos := range *p {
-		sum += pos.Quantity.Int()
+		sum += pos.quantity.Int()
 	}
 	return sum
 }

@@ -29,7 +29,7 @@ func TestCollectPositions(t *testing.T) {
 	ts.AddNewTrade("spot_buy", "1234", 100)
 	AddPositionTrades(ps, &ts.Positions)
 	assert.Equal(t, 1, len(*ps), "同じポジションはまとめられる")
-	assert.Equal(t, 200, (*ps)[0].Quantity.Int(), "同じポジションはまとめられる")
+	assert.Equal(t, 200, (*ps)[0].Quantity(), "同じポジションはまとめられる")
 }
 func TestImportAllTrade(t *testing.T) {
 	ts := trade.NewTrades()

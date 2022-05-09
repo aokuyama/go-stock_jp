@@ -1,6 +1,7 @@
 package calendar_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	. "github.com/aokuyama/go-stock_jp/model/calendar"
@@ -32,6 +33,16 @@ func TestDateSorted(t *testing.T) {
 	d = c.Nth(4)
 	assert.Equal(t, `{"date":"2021-04-01","is_holiday":true}`, d.String())
 	assert.Equal(t, `{"dates":[{"date":"2019-12-15","is_holiday":true},{"date":"2020-10-08","is_holiday":true},{"date":"2020-10-09","is_holiday":false},{"date":"2020-10-10","is_holiday":false},{"date":"2021-04-01","is_holiday":true}]}`, c.String())
+}
+
+func TestMarshalUnmarshal(t *testing.T) {
+	equal := `{"dates":[{"date":"2019-12-15","is_holiday":true}]}`
+	var c Calendar
+	err := json.Unmarshal([]byte(equal), &c)
+	assert.NoError(t, err)
+	j, err := json.Marshal(&c)
+	assert.NoError(t, err)
+	assert.Equal(t, equal, string(j))
 }
 
 func TestErrorDuplicateDates(t *testing.T) {

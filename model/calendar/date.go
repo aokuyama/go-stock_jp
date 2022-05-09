@@ -11,6 +11,11 @@ type Date struct {
 	isHoliday bool
 }
 
+type dateJson struct {
+	Date      common.Date `json:"date"`
+	IsHoliday bool        `json:"is_holiday"`
+}
+
 func NewDate(date string, isHoliday bool) (*Date, error) {
 	d, err := common.NewDate(date)
 	if err != nil {
@@ -47,11 +52,20 @@ func (d *Date) String() string {
 }
 
 func (d *Date) MarshalJSON() ([]byte, error) {
-	return json.Marshal(&struct {
-		Date      common.Date `json:"date"`
-		IsHoliday bool        `json:"is_holiday"`
-	}{
+	return json.Marshal(&dateJson{
 		Date:      d.date,
 		IsHoliday: d.isHoliday,
 	})
+}
+
+func (d *Date) UnmarshalJSON(b []byte) error {
+	j := dateJson{}
+	if err := json.Unmarshal(b, &j); err != nil {
+		return err
+	}
+	*d = Date{
+		date:      j.Date,
+		isHoliday: j.IsHoliday,
+	}
+	return nil
 }

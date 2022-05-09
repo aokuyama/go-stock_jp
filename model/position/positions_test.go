@@ -20,12 +20,12 @@ func TestAddPositionTrade(t *testing.T) {
 	assert.Equal(t, 2, len(*ps), "ポジションが追加される")
 	ps.AddPositionTrade(t1)
 	assert.Equal(t, 2, len(*ps), "ポジションがまとめられる")
-	assert.Equal(t, 200, (*ps)[0].Quantity.Int(), "ポジションがまとめられる")
+	assert.Equal(t, 200, (*ps)[0].Quantity(), "ポジションがまとめられる")
 	t3, _ := trade.NewPositionTrade("spot_buy", "1234", 300)
 	ps.AddPositionTrade(t3)
 	ps.AddPositionTrade(t2)
 	assert.Equal(t, 2, len(*ps), "ポジションがまとめられる")
-	assert.Equal(t, 500, (*ps)[0].Quantity.Int(), "ポジションがまとめられる")
+	assert.Equal(t, 500, (*ps)[0].Quantity(), "ポジションがまとめられる")
 }
 
 func TestAddPayTrade(t *testing.T) {
@@ -36,14 +36,14 @@ func TestAddPayTrade(t *testing.T) {
 	assert.NoError(t, err)
 	err = ps.AddPositionTrade(po)
 	assert.NoError(t, err)
-	assert.Equal(t, 400, (*ps)[0].Quantity.Int())
+	assert.Equal(t, 400, (*ps)[0].Quantity())
 	py, _ := trade.NewPayTrade("pay_sell", "1234", 200)
 	err = ps.AddPayTrade(py)
 	assert.NoError(t, err)
-	assert.Equal(t, 200, (*ps)[0].Quantity.Int(), "手仕舞われた分だけ減少している")
+	assert.Equal(t, 200, (*ps)[0].Quantity(), "手仕舞われた分だけ減少している")
 	err = ps.AddPayTrade(py)
 	assert.NoError(t, err)
-	assert.Equal(t, 0, (*ps)[0].Quantity.Int(), "手仕舞われた分だけ減少している")
+	assert.Equal(t, 0, (*ps)[0].Quantity(), "手仕舞われた分だけ減少している")
 }
 
 func TestErrorPayTrade(t *testing.T) {
@@ -66,7 +66,7 @@ func TestOverPayTrade(t *testing.T) {
 	py, _ := trade.NewPayTrade("pay_sell", "1234", 200)
 	err = ps.AddPayTrade(py)
 	assert.NoError(t, err)
-	assert.Equal(t, 100, (*ps)[0].Quantity.Int(), "手仕舞われた分だけ減少している")
+	assert.Equal(t, 100, (*ps)[0].Quantity(), "手仕舞われた分だけ減少している")
 	err = ps.AddPayTrade(py)
 	assert.Error(t, err, "マイナスになってしまっている")
 }

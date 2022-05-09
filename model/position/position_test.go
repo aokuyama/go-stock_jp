@@ -52,12 +52,12 @@ func TestCompletePosition(t *testing.T) {
 	var p *Position
 	p, _ = New("margin_buy", "1300", 200)
 	assert.False(t, p.IsCompleted())
-	p.Quantity -= 100
-	assert.False(t, p.IsCompleted())
-	p.Quantity -= 100
-	assert.True(t, p.IsCompleted())
-	p.Quantity -= 100
-	assert.False(t, p.IsCompleted())
+	p2, _ := p.Decrement(100)
+	assert.False(t, p2.IsCompleted())
+	p3, _ := p2.Decrement(100)
+	assert.True(t, p3.IsCompleted())
+	_, err := p3.Decrement(100)
+	assert.Error(t, err)
 }
 func TestNewPositionByTrade(t *testing.T) {
 	pt1, _ := trade.NewPositionTrade("margin_buy", "1300", 200)
@@ -73,10 +73,10 @@ func TestNewPositionByPositionAndPayTrade(t *testing.T) {
 		pt1, _ := trade.NewPayTrade("pay_sell", "1300", 100)
 		p2, _ := NewPositionByPositionAndPayTrade(p1, pt1)
 		assert.Equal(t, "{\"position_type\":\"margin_buy\",\"security_code\":\"1300\",\"quantity\":100}", p2.String())
-		assert.Equal(t, 200, p1.Quantity.Int(), "元のポジションは変化していない")
+		assert.Equal(t, 200, p1.Quantity(), "元のポジションは変化していない")
 		p3, _ := NewPositionByPositionAndPayTrade(p2, pt1)
 		assert.Equal(t, "{\"position_type\":\"margin_buy\",\"security_code\":\"1300\",\"quantity\":0}", p3.String())
-		assert.Equal(t, 200, p1.Quantity.Int(), "元のポジションは変化していない")
+		assert.Equal(t, 200, p1.Quantity(), "元のポジションは変化していない")
 	})
 	t.Run("error", func(t *testing.T) {
 		var err error
@@ -101,12 +101,12 @@ func TestNewIntegratePosition(t *testing.T) {
 		p2, _ := New("margin_buy", "1300", 100)
 		p3, _ := New("margin_buy", "1300", 500)
 		p12, _ := NewIntegratePosition(p1, p2)
-		assert.Equal(t, 300, p12.Quantity.Int(), "統合されたポジション")
+		assert.Equal(t, 300, p12.Quantity(), "統合されたポジション")
 		p23, _ := NewIntegratePosition(p2, p3)
-		assert.Equal(t, 600, p23.Quantity.Int(), "統合されたポジション")
-		assert.Equal(t, 200, p1.Quantity.Int(), "元のポジションは変化していない")
-		assert.Equal(t, 100, p2.Quantity.Int(), "元のポジションは変化していない")
-		assert.Equal(t, 500, p3.Quantity.Int(), "元のポジションは変化していない")
+		assert.Equal(t, 600, p23.Quantity(), "統合されたポジション")
+		assert.Equal(t, 200, p1.Quantity(), "元のポジションは変化していない")
+		assert.Equal(t, 100, p2.Quantity(), "元のポジションは変化していない")
+		assert.Equal(t, 500, p3.Quantity(), "元のポジションは変化していない")
 	})
 	t.Run("error", func(t *testing.T) {
 		var err error
